@@ -1,7 +1,55 @@
-## Here we can define any tables in our database. This example shows how we define a type as a table using
-## the type name as the table name and specifying it is an "export" available in the REST and other external protocols.
-type TableName @table @export {
-  id: ID @primaryKey # Here we define primary key (must be one)
-  name: String # we can define any other attributes here
-  tag: String @indexed # we can specify any attributes that should be indexed
+type Issue @table(audit: true) @sealed @export {
+  id: ID! @primaryKey
+  photoUrl: String!
+  typeId: ID! @indexed
+  type: IssueType! @relationship(from: typeId)
+  description: String!
+  coordinates: [Float!]! @indexed(type: "HNSW")
+  communityId: ID! @indexed
+  community: Community @relationship(from: communityId)
+  status: IssueStatus!
+  submittedByEmail: String @indexed
+  numUpvotess: Int!
+  createdAt: Date! @createdTime
+}
+
+enum IssueStatus {
+  Open
+  UnderReview
+  Scheduled
+  InProgress
+  Completed
+  NotPlanned
+}
+
+type IssueType @table @sealed @export {
+  id: ID! @primaryKey
+  communityId: ID! @indexed
+  community: Community! @relationship(from: communityId)
+  name: String!
+}
+
+type Community @table @sealed @export {
+  id: ID! @primaryKey
+  name: String!
+  logoUrl: String
+  geographicCenter: [Float!]! @indexed(type: "HNSW")
+  radiusMeters: Int!
+  issueTypes: [IssueType!]! @relationship(to: communityId)
+  issues: [Issue!]! @relationship(to: communityId)
+}
+
+type User @table @sealed {
+  id: ID! @primaryKey
+  name: String!
+  email: String!
+  password: String!
+}
+
+type Session @table @sealed {
+  id: ID! @primaryKey
+  userId: ID! @indexed
+  user: User! @relationship(from: userId)
+  token: String!
+  createdAt: Date! @createdTime
 }
