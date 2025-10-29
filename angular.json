@@ -5,52 +5,23 @@
   "projects": {
     "mell": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss",
-          "inlineStyle": true,
-          "inlineTemplate": true,
-          "skipTests": true,
-          "type": "component",
-          "flat": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true,
-          "type": "service"
-        },
-        "@schematics/angular:directive": {
-          "skipTests": true,
-          "type": "directive"
-        },
-        "@schematics/angular:pipe": {
-          "skipTests": true
-        },
-        "@schematics/angular:guard": {
-          "skipTests": true
-        },
-        "@schematics/angular:interceptor": {
-          "skipTests": true
-        }
-      },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "mell",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -95,25 +66,20 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.css"]
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -121,8 +87,52 @@
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "changeDetection": "OnPush",
+      "inlineTemplate": true,
+      "flat": true,
+      "skipTests": true,
+      "style": "none",
+      "type": "component"
+    },
+    "@schematics/angular:class": {
+      "skipTests": true
+    },
+    "@schematics/angular:directive": {
+      "skipTests": true,
+      "flat": true,
+      "type": "directive"
+    },
+    "@schematics/angular:guard": {
+      "skipTests": true,
+      "flat": true,
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "skipTests": true,
+      "flat": true,
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "skipTests": true,
+      "flat": true,
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "skipTests": true,
+      "flat": true,
+      "typeSeparator": "."
+    },
+    "@schematics/angular:service": {
+      "skipTests": true,
+      "flat": true,
+      "type": "service"
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    }
   }
 }
