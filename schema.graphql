@@ -1,5 +1,5 @@
 type Issue @table(audit: true) @sealed @export {
-  id: ID! @primaryKey
+  id: ID @primaryKey
   photoUrl: String!
   typeId: ID! @indexed
   type: IssueType! @relationship(from: typeId)
@@ -9,8 +9,9 @@ type Issue @table(audit: true) @sealed @export {
   community: Community @relationship(from: communityId)
   status: IssueStatus!
   submittedByEmail: String @indexed
-  numUpvotess: Int!
-  createdAt: Date! @createdTime
+  numUpvotes: Int!
+  createdAt: Date @createdTime
+  updatedAt: Date @updatedTime
 }
 
 enum IssueStatus {
@@ -23,33 +24,40 @@ enum IssueStatus {
 }
 
 type IssueType @table @sealed @export {
-  id: ID! @primaryKey
+  id: ID @primaryKey
   communityId: ID! @indexed
   community: Community! @relationship(from: communityId)
   name: String!
+  createdAt: Date @createdTime
+  updatedAt: Date @updatedTime
 }
 
 type Community @table @sealed @export {
-  id: ID! @primaryKey
+  id: ID @primaryKey
   name: String!
   logoUrl: String
   geographicCenter: [Float!]! @indexed(type: "HNSW")
   radiusMeters: Int!
   issueTypes: [IssueType!]! @relationship(to: communityId)
   issues: [Issue!]! @relationship(to: communityId)
+  createdAt: Date @createdTime
+  updatedAt: Date @updatedTime
 }
 
 type User @table @sealed {
-  id: ID! @primaryKey
+  id: ID @primaryKey
   name: String!
   email: String!
   password: String!
+  createdAt: Date @createdTime
+  updatedAt: Date @updatedTime
 }
 
 type Session @table @sealed {
-  id: ID! @primaryKey
+  id: ID @primaryKey
   userId: ID! @indexed
   user: User! @relationship(from: userId)
   token: String!
-  createdAt: Date! @createdTime
+  createdAt: Date @createdTime
+  updatedAt: Date @updatedTime
 }
