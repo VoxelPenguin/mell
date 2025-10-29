@@ -5,10 +5,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'mell-root',
   imports: [RouterOutlet],
   template: `
-    <main>
-      <h1>{{ title() }}</h1>
-      <p>Hello world!</p>
-    </main>
+    <h1>Mell</h1>
     <router-outlet />
   `,
 })
