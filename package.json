@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy:prod": "./deploy-prod.sh",
+    "deploy:dev": "./deploy-dev.sh",
     "lint": "ng lint"
   },
   "private": true,
