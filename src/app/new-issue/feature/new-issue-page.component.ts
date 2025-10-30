@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { encodeImageAsBase64Url } from '../../shared/util/image-helpers';
 
 enum Step {
   Location = 'location',
@@ -46,7 +47,18 @@ enum Step {
         @case (Step.Photo) {
           <h2>Snap a photo of the issue</h2>
 
-          <input type="file" accept="image/*" name="photo" required ngModel />
+          <input
+            #photoInput
+            type="file"
+            accept="image/*"
+            name="photo"
+            required
+            ngModel
+            capture="environment"
+            style="display: none;"
+            (change)="onPhotoChange($event)"
+          />
+          <button type="button" (click)="photoInput.click()">Take Photo</button>
 
           <button
             type="button"
@@ -55,13 +67,20 @@ enum Step {
           >
             Next ->
           </button>
+
+          @if (photoDataUrl(); as dataUrl) {
+            <img
+              [src]="dataUrl"
+              style="display: block; width: min(100%, 30rem); height: auto"
+            />
+          }
         }
 
         @case (Step.Thinking) {
           <h2>Thinking...</h2>
 
           <button type="button" (click)="step.set(Step.Review)">
-            Stop thinkging
+            Stop thinking
           </button>
         }
 
@@ -97,8 +116,24 @@ export default class NewIssuePageComponent {
 
   readonly step = signal<Step>(Step.Location);
 
+  readonly photoDataUrl = signal<string | null>(null);
+
   getCurrentLocation(): void {
     alert('TODO: implement this');
+  }
+
+  async onPhotoChange(e: Event) {
+    const inputElement = e.target as HTMLInputElement | undefined;
+    const imageFile = inputElement?.files?.[0];
+
+    if (!imageFile) {
+      this.photoDataUrl.set(null);
+      return;
+    }
+
+    const photoDataUrl = await encodeImageAsBase64Url(imageFile);
+
+    this.photoDataUrl.set(photoDataUrl);
   }
 
   onSubmit(formValue: { address: string; photo: File; type: string }): void {
