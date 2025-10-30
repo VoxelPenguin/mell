@@ -9,7 +9,8 @@
     "test": "ng test",
     "deploy:prod": "./deploy-prod.sh",
     "deploy:dev": "./deploy-dev.sh",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "si": "npm install --legacy-peer-deps"
   },
   "private": true,
   "pre-commit": [
