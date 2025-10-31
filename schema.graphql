@@ -5,6 +5,7 @@ type Issue @table(audit: true) @sealed @export {
   type: IssueType! @relationship(from: typeId)
   description: String!
   coordinates: [Float!]! @indexed(type: "HNSW")
+  address: String!
   communityId: ID! @indexed
   community: Community @relationship(from: communityId)
   status: IssueStatus!
