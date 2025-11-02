@@ -12,8 +12,9 @@ export enum IssueStatus {
 export interface Issue {
   id: string;
   photoUrl: string;
-  typeId: string;
-  type: IssueType;
+  typeId?: string;
+  type?: IssueType;
+  otherTypeName?: string;
   description: string;
   coordinates: [number, number]; // [longitude, latitude]
   address: string; // [longitude, latitude]
@@ -69,6 +70,19 @@ export interface Session {
 export type IssueInput = Omit<
   Issue,
   'id' | 'type' | 'community' | 'createdAt' | 'updatedAt'
+>;
+export type IssueSubmission = Required<
+  Omit<
+    Issue,
+    | 'id'
+    | 'type'
+    | 'community'
+    | 'status'
+    | 'submittedByEmail'
+    | 'numUpvotes'
+    | 'createdAt'
+    | 'updatedAt'
+  >
 >;
 export type IssueTypeInput = Omit<
   IssueType,

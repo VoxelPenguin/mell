@@ -4,14 +4,28 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
   output,
+  input,
+  effect,
+  model,
+  computed,
+  OnInit,
 } from '@angular/core';
 import {
   FormsModule,
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { ButtonDirective, ButtonIcon } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import {
+  ArrowRight,
+  LucideAngularModule,
+  Navigation,
+  Search,
+} from 'lucide-angular';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { FormValueControl } from '@angular/forms/signals';
 
 export interface LocationData {
   latitude: number;
@@ -35,7 +49,14 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
 
 @Component({
   selector: 'mell-location-picker',
-  imports: [FormsModule, ButtonDirective, InputTextModule],
+  imports: [
+    FormsModule,
+    ButtonDirective,
+    InputTextModule,
+    LucideAngularModule,
+    InputGroup,
+    InputGroupAddon,
+  ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -44,203 +65,129 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
     },
   ],
   template: `
-    <div class="mx-auto p-4">
-      @if (!locationSelected()) {
-        <!-- Initial State -->
-        <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
+      <!-- Use My Location Button -->
+      <button
+        pButton
+        type="button"
+        (click)="useCurrentLocation()"
+        [disabled]="isLoadingLocation()"
+      >
+        @if (isLoadingLocation()) {
+          <span
+            class="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
+          ></span>
+          <span>Locating...</span>
+        } @else {
+          <lucide-icon [img]="Navigation" size="20" /> Use My Location
+        }
+      </button>
+
+      <!-- Address Search -->
+      <p-inputgroup>
+        <input
+          pInputText
+          id="address-input"
+          type="text"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="searchAddress()"
+          placeholder="Search for an address"
+          class="w-full"
+          [disabled]="isSearching()"
+        />
+        <p-inputgroup-addon>
           <button
             pButton
-            type="button"
-            class="p-button-rounded"
-            (click)="useCurrentLocation()"
-            [disabled]="isLoadingLocation()"
+            class="p-button-text p-button-secondary"
+            (click)="searchAddress()"
+            [disabled]="isSearching()"
           >
-            @if (isLoadingLocation()) {
+            <lucide-icon [img]="Search" size="20" />
+          </button>
+        </p-inputgroup-addon>
+      </p-inputgroup>
+
+      @if (errorMessage()) {
+        <div
+          class="rounded-lg border border-red-200 bg-red-50 px-3.5 py-3.5 text-sm text-red-800"
+        >
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Map -->
+      <div>
+        <div
+          class="border-primary-800 h-56 w-full overflow-hidden rounded-t-lg rounded-b-none sm:h-[300px]"
+          id="map-container"
+        >
+          <!-- Leaflet map will be initialized here -->
+        </div>
+
+        <!-- Location Info -->
+        <div
+          class="flex flex-col gap-2 rounded-t-none rounded-b-lg bg-gray-50 px-4 py-3"
+        >
+          <div class="flex items-center gap-2 text-base text-gray-900">
+            @if (isLoadingAddress()) {
               <span
                 class="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
               ></span>
-              <span>Getting your location...</span>
+              <span>Loading address...</span>
             } @else {
-              📍 Use My Location
+              <strong>{{ currentAddress() }}</strong>
             }
-          </button>
-
-          <!-- Or -->
-          <div class="my-2 flex items-center text-center">
-            <div class="border-primary-900/30 flex-1 border-b"></div>
-            <span class="px-4 text-sm">Or</span>
-            <div class="border-primary-900/30 flex-1 border-b"></div>
           </div>
-
-          <div class="flex flex-col gap-2">
-            <label for="address-input" class="text-sm font-semibold">
-              Enter an address
-            </label>
-            <input
-              pInputText
-              id="address-input"
-              type="text"
-              [(ngModel)]="searchQuery"
-              (keyup.enter)="searchAddress()"
-              placeholder="123 Main St, City, State"
-              class="w-full"
-            />
-            <button
-              pButton
-              type="button"
-              class="p-button-rounded"
-              (click)="searchAddress()"
-              [disabled]="!searchQuery() || isSearching()"
-            >
-              @if (isSearching()) {
-                <span
-                  class="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
-                ></span>
-              } @else {
-                <span>Search</span>
-              }
-            </button>
-          </div>
-
-          <!-- Or -->
-          <div class="my-2 flex items-center text-center">
-            <div class="border-primary-900/30 flex-1 border-b"></div>
-            <span class="px-4 text-sm">Or</span>
-            <div class="border-primary-900/30 flex-1 border-b"></div>
-          </div>
-
-          <button
-            pButton
-            type="button"
-            class="p-button-rounded p-button-secondary"
-            (click)="showMapPicker()"
-          >
-            🗺️ Pick location on map
-          </button>
-
-          @if (errorMessage()) {
-            <div
-              class="rounded-lg border border-red-200 bg-red-50 px-3.5 py-3.5 text-sm text-red-800"
-            >
-              {{ errorMessage() }}
-            </div>
-          }
         </div>
-      } @else {
-        <!-- Location Selected State -->
-        <div class="flex flex-col gap-4">
-          <div
-            class="h-[400px] w-full overflow-hidden rounded-lg border-2 border-gray-300 sm:h-[300px]"
-            #mapContainer
-          >
-            <!-- Leaflet map will be initialized here -->
-          </div>
-
-          <div class="flex flex-col gap-2 rounded-lg bg-gray-50 p-4">
-            <div class="flex items-center gap-2 text-base text-gray-900">
-              @if (isLoadingAddress()) {
-                <span
-                  class="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
-                ></span>
-                <span>Loading address...</span>
-              } @else {
-                <strong>{{ currentAddress() }}</strong>
-              }
-            </div>
-            <div class="font-mono text-sm text-gray-600">
-              {{ currentLatitude().toFixed(6) }},
-              {{ currentLongitude().toFixed(6) }}
-            </div>
-            <p class="mt-2 text-sm text-gray-600">
-              Drag the pin to adjust the location
-            </p>
-          </div>
-
-          <div class="mt-2 grid grid-cols-2 gap-3">
-            <button
-              pButton
-              type="button"
-              class="p-button-rounded p-button-secondary"
-              (click)="resetSelection()"
-            >
-              Change Location
-            </button>
-            <button
-              pButton
-              type="button"
-              class="p-button-rounded"
-              (click)="onConfirmLocation()"
-              [disabled]="isLoadingAddress()"
-            >
-              Confirm Location
-            </button>
-          </div>
-
-          @if (errorMessage()) {
-            <div
-              class="rounded-lg border border-red-200 bg-red-50 px-3.5 py-3.5 text-sm text-red-800"
-            >
-              {{ errorMessage() }}
-            </div>
-          }
-        </div>
-      }
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LocationPickerComponent implements ControlValueAccessor {
-  // Outputs
-  readonly confirmLocation = output();
+export class LocationPickerComponent
+  implements FormValueControl<LocationData>, OnInit
+{
+  // Form control values
+  readonly value = model<LocationData>({
+    latitude: 0,
+    longitude: 0,
+    address: '',
+  });
+  readonly disabled = input(false);
 
   // State
-  searchQuery = signal('');
-  locationSelected = signal(false);
-  currentLatitude = signal(0);
-  currentLongitude = signal(0);
-  currentAddress = signal('');
-  isLoadingLocation = signal(false);
-  isLoadingAddress = signal(false);
-  isSearching = signal(false);
-  errorMessage = signal('');
+  readonly searchQuery = signal('');
+  readonly isLoadingLocation = signal(false);
+  readonly isLoadingAddress = signal(false);
+  readonly isSearching = signal(false);
+  readonly errorMessage = signal('');
+
+  readonly currentAddress = computed(() => this.value().address);
 
   // Leaflet map instance
   private map: any = null;
   private marker: any = null;
 
-  // ControlValueAccessor
-  private onChange: (value: LocationData | null) => void = () => {};
-  private onTouched: () => void = () => {};
-  disabled = false;
-
-  constructor() {
-    // Load Leaflet dynamically
-    this.loadLeaflet();
-  }
-
-  writeValue(value: LocationData | null): void {
-    if (value) {
-      this.currentLatitude.set(value.latitude);
-      this.currentLongitude.set(value.longitude);
-      this.currentAddress.set(value.address);
-      this.locationSelected.set(true);
+  ngOnInit() {
+    // Load Leaflet and initialize map
+    this.loadLeaflet().then(() => {
       this.initializeMap();
-    } else {
-      this.resetSelection();
-    }
+      this.reverseGeocode(this.value().latitude, this.value().longitude);
+    });
   }
 
-  registerOnChange(fn: (value: LocationData | null) => void): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
+  // readonly syncMap = effect(() => {
+  //   console.log('test');
+  //
+  //   const { latitude, longitude } = this.value();
+  //
+  //   if (this.map) {
+  //     this.map.setView([latitude, longitude], 15);
+  //     if (this.marker) {
+  //       this.marker.setLatLng([latitude, longitude]);
+  //     }
+  //   }
+  // });
 
   private async loadLeaflet(): Promise<void> {
     // Add Leaflet CSS
@@ -265,10 +212,9 @@ export class LocationPickerComponent implements ControlValueAccessor {
   }
 
   async useCurrentLocation(): Promise<void> {
-    if (this.disabled) return;
+    if (this.disabled()) return;
 
     this.errorMessage.set('');
-    this.onTouched();
 
     if (!navigator.geolocation) {
       this.errorMessage.set('Geolocation is not supported by your browser');
@@ -279,12 +225,28 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        this.currentLatitude.set(position.coords.latitude);
-        this.currentLongitude.set(position.coords.longitude);
-        this.locationSelected.set(true);
+        this.value.update((value) => ({
+          ...value,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }));
+
         this.isLoadingLocation.set(false);
 
-        await this.initializeMap();
+        // Update map view
+        if (this.map) {
+          this.map.setView(
+            [position.coords.latitude, position.coords.longitude],
+            17,
+          );
+          if (this.marker) {
+            this.marker.setLatLng([
+              position.coords.latitude,
+              position.coords.longitude,
+            ]);
+          }
+        }
+
         await this.reverseGeocode(
           position.coords.latitude,
           position.coords.longitude,
@@ -317,14 +279,13 @@ export class LocationPickerComponent implements ControlValueAccessor {
   }
 
   async searchAddress(): Promise<void> {
-    if (this.disabled) return;
+    if (this.disabled()) return;
 
     const query = this.searchQuery().trim();
     if (!query) return;
 
     this.errorMessage.set('');
     this.isSearching.set(true);
-    this.onTouched();
 
     try {
       const response = await fetch(
@@ -347,30 +308,28 @@ export class LocationPickerComponent implements ControlValueAccessor {
       }
 
       const result = results[0];
-      this.currentLatitude.set(parseFloat(result.lat));
-      this.currentLongitude.set(parseFloat(result.lon));
-      this.currentAddress.set(result.display_name);
-      this.locationSelected.set(true);
+
+      this.value.set({
+        latitude: Number(result.lat),
+        longitude: Number(result.lon),
+        address: result.display_name,
+      });
       this.isSearching.set(false);
 
-      await this.initializeMap();
+      // Update map view
+      if (this.map) {
+        this.map.setView([parseFloat(result.lat), parseFloat(result.lon)], 15);
+        if (this.marker) {
+          this.marker.setLatLng([
+            parseFloat(result.lat),
+            parseFloat(result.lon),
+          ]);
+        }
+      }
     } catch (error) {
       this.errorMessage.set('Error searching for address. Please try again.');
       this.isSearching.set(false);
     }
-  }
-
-  async showMapPicker(): Promise<void> {
-    if (this.disabled) return;
-
-    this.onTouched();
-    // Default to a reasonable center point (you can customize this)
-    this.currentLatitude.set(39.8283); // Center of USA
-    this.currentLongitude.set(-98.5795);
-    this.currentAddress.set('Drag the pin to select a location');
-    this.locationSelected.set(true);
-
-    await this.initializeMap();
   }
 
   private async initializeMap(): Promise<void> {
@@ -382,7 +341,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
       const L = (window as any).L;
       if (!L) return;
 
-      const container = document.querySelector('.w-full.h-\\[400px\\]');
+      const container = document.getElementById('map-container');
       if (!container) return;
 
       // Remove existing map if present
@@ -392,33 +351,46 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
       // Initialize map
       this.map = L.map(container).setView(
-        [this.currentLatitude(), this.currentLongitude()],
-        15,
+        [this.value().latitude, this.value().longitude],
+        19,
       );
 
       // Add OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
         maxZoom: 19,
       }).addTo(this.map);
 
-      // Add draggable marker
-      this.marker = L.marker(
-        [this.currentLatitude(), this.currentLongitude()],
-        { draggable: !this.disabled },
-      ).addTo(this.map);
+      // Add marker
+      this.marker = L.marker([
+        this.value().latitude,
+        this.value().longitude,
+      ]).addTo(this.map);
 
-      // Handle marker drag
-      this.marker.on('dragend', async () => {
-        const position = this.marker.getLatLng();
-        this.currentLatitude.set(position.lat);
-        this.currentLongitude.set(position.lng);
-        await this.reverseGeocode(position.lat, position.lng);
+      this.map.on('move', () => {
+        const position = this.map.getCenter();
+        this.marker.setLatLng([position.lat, position.lng]);
+        this.value.update((value) => ({
+          ...value,
+          latitude: position.lat,
+          longitude: position.lng,
+        }));
+      });
+
+      this.map.on('moveend', async () => {
+        await this.reverseGeocode(
+          this.value().latitude,
+          this.value().longitude,
+        );
       });
     }, 100);
   }
 
   private async reverseGeocode(lat: number, lon: number): Promise<void> {
+    this.value.update((value) => ({
+      ...value,
+      address: '',
+    }));
+
     this.isLoadingAddress.set(true);
     this.errorMessage.set('');
 
@@ -433,42 +405,17 @@ export class LocationPickerComponent implements ControlValueAccessor {
       );
 
       const result: NominatimResult = await response.json();
-      this.currentAddress.set(result.display_name);
+      this.value.update((value) => ({
+        ...value,
+        address: result.display_name,
+      }));
     } catch (error) {
-      this.currentAddress.set('Unable to load address');
       this.errorMessage.set('Could not load address for this location.');
     } finally {
       this.isLoadingAddress.set(false);
     }
   }
 
-  resetSelection(): void {
-    if (this.disabled) return;
-
-    this.locationSelected.set(false);
-    this.searchQuery.set('');
-    this.errorMessage.set('');
-    this.currentAddress.set('');
-    this.onChange(null);
-
-    // Cleanup map
-    if (this.map) {
-      this.map.remove();
-      this.map = null;
-      this.marker = null;
-    }
-  }
-
-  onConfirmLocation(): void {
-    if (this.disabled || this.isLoadingAddress()) return;
-
-    const locationData: LocationData = {
-      latitude: this.currentLatitude(),
-      longitude: this.currentLongitude(),
-      address: this.currentAddress(),
-    };
-
-    this.onChange(locationData);
-    this.confirmLocation.emit();
-  }
+  protected readonly Navigation = Navigation;
+  protected readonly Search = Search;
 }

@@ -1,8 +1,9 @@
 type Issue @table(audit: true) @sealed @export {
   id: ID @primaryKey
   photoUrl: String!
-  typeId: ID! @indexed
-  type: IssueType! @relationship(from: typeId)
+  typeId: ID @indexed
+  type: IssueType @relationship(from: typeId)
+  otherTypeName: String
   description: String!
   coordinates: [Float!]! @indexed(type: "HNSW")
   address: String!
@@ -28,14 +29,14 @@ type IssueType @table @sealed @export {
   id: ID @primaryKey
   communityId: ID! @indexed
   community: Community! @relationship(from: communityId)
-  name: String!
+  name: String! @indexed
   createdAt: Date @createdTime
   updatedAt: Date @updatedTime
 }
 
 type Community @table @sealed @export {
   id: ID @primaryKey
-  name: String!
+  name: String! @indexed
   logoUrl: String
   geographicCenter: [Float!]! @indexed(type: "HNSW")
   radiusMeters: Int!

@@ -15,6 +15,7 @@ import { interval, map, startWith } from 'rxjs';
       height="256"
       width="256"
       class="mx-auto size-64"
+      priority
     />
 
     <h1 class="text-center text-3xl font-bold">
@@ -27,14 +28,8 @@ import { interval, map, startWith } from 'rxjs';
       <strong>together</strong>.
     </p>
 
-    <a routerLink="../new-issue" pButton class="p-button-rounded">
-      Submit new issue
-    </a>
-    <a
-      routerLink="../existing-issues"
-      pButton
-      class="p-button-secondary p-button-rounded"
-    >
+    <a routerLink="../new-issue/location" pButton> Submit new issue </a>
+    <a routerLink="../existing-issues" pButton class="p-button-secondary">
       Check on an existing issue
     </a>
   `,
