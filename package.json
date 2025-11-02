@@ -10,7 +10,7 @@
     "deploy:prod": "./deploy-prod.sh",
     "deploy:dev": "./deploy-dev.sh",
     "lint": "ng lint",
-    "si": "npm install --legacy-peer-deps",
+    "si": "npm install --legacy-peer-deps && npm link harperdb --legacy-peer-deps",
     "build:backend": "cd backend && tsc"
   },
   "private": true,
