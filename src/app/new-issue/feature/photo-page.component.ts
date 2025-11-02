@@ -1,18 +1,23 @@
+import { NgOptimizedImage } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
 } from '@angular/core';
-import { FormProvider } from './form-provider';
-import { Community, IssueSubmission } from '../../../../types/db-types';
-import { NgOptimizedImage } from '@angular/common';
-import { SpeechBubbleComponent } from '../ui/speech-bubble.component';
-import { ButtonDirective } from 'primeng/button';
-import { resizeImageAndConvertToDataUrl } from '../../shared/util/image-helpers';
-import { comment } from 'postcss';
-import { compile } from 'tailwindcss';
 import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
+import { ButtonDirective } from 'primeng/button';
+import { PhotoAnalysisPayload } from '../../../../types/api-types';
+import { Issue, IssueSubmission } from '../../../../types/db-types';
+import { environment } from '../../../environments/environment';
+import {
+  getMimeType,
+  getRawImageData,
+  resizeImageAndConvertToDataUrl,
+} from '../../shared/util/image-helpers';
+import { SpeechBubbleComponent } from '../ui/speech-bubble.component';
+import { FormProvider } from './form-provider';
 
 @Component({
   selector: 'mell-photo-page',
@@ -62,7 +67,7 @@ import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
           Retake
         </button>
 
-        <button pButton class="flex gap-2">
+        <button pButton class="flex gap-2" (click)="next()">
           Next
           <lucide-icon [img]="ArrowRight" size="20" />
         </button>
@@ -88,6 +93,7 @@ import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
 export default class ChooseCommunityPageComponent {
   private readonly formProvider: FormProvider<IssueSubmission> =
     inject(FormProvider);
+  private readonly http = inject(HttpClient);
 
   readonly formValue = this.formProvider.formValue;
 
@@ -114,7 +120,18 @@ export default class ChooseCommunityPageComponent {
   }
 
   next(): void {
-    // TODO: implement this
+    const formValue = this.formValue();
+
+    this.http
+      .post<Pick<Issue, 'id' | 'description'>>(
+        `${environment.harperApiUrl}/PhotoAnalysis`,
+        {
+          imageData: getRawImageData(formValue.photoUrl),
+          imageMimeType: getMimeType(formValue.photoUrl),
+          communityId: '5dfe8372-6927-4320-9e41-fe63984c5081',
+        } satisfies PhotoAnalysisPayload,
+      )
+      .subscribe(console.log);
   }
 
   protected readonly ArrowRight = ArrowRight;

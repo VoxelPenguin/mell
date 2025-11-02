@@ -5,32 +5,15 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import {
-  encodeImageAsBase64Url,
-  resizeImageAndConvertToDataUrl,
-} from '../../shared/util/image-helpers';
-import {
-  LocationData,
-  LocationPickerComponent,
-} from '../ui/location-picker.component';
-import { ButtonDirective } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { InputText } from 'primeng/inputtext';
-import { NgOptimizedImage } from '@angular/common';
-import { Issue, IssueSubmission } from '../../../../types/db-types';
-import {
-  applyWhen,
-  customError,
-  form,
-  required,
-  validate,
-} from '@angular/forms/signals';
-import { FormProvider } from './form-provider';
+import { form, required } from '@angular/forms/signals';
+import { Router, RouterOutlet } from '@angular/router';
 import { ArrowLeft, LucideAngularModule, Trash2 } from 'lucide-angular';
-import { Dialog } from 'primeng/dialog';
-import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { SelectModule } from 'primeng/select';
+import { Issue } from '../../../../types/db-types';
+import { LocationData } from '../ui/location-picker.component';
+import { FormProvider } from './form-provider';
 
 enum Step {
   Location = 'location',
@@ -173,7 +156,10 @@ export type NewIssueFormModel = Pick<
     <!--    }-->
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{ provide: FormProvider, useExisting: NewIssuePageComponent }],
+  providers: [
+    { provide: FormProvider, useExisting: NewIssuePageComponent },
+    ConfirmationService,
+  ],
 })
 export default class NewIssuePageComponent extends FormProvider<NewIssueFormModel> {
   // private readonly router = inject(Router);
