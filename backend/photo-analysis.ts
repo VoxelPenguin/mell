@@ -72,6 +72,7 @@ export class PhotoAnalysis extends Resource {
               type: Type.STRING,
             },
           },
+          required: ['typeId', 'description'],
         },
       },
     });
