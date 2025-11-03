@@ -14,6 +14,14 @@ export const routes: Routes = [
     loadChildren: () => import('./existing-issues/feature/lib.routes'),
   },
   {
+    path: 'new-community',
+    loadChildren: () => import('./new-community/feature/lib.routes'),
+  },
+  {
+    path: 'communities',
+    loadChildren: () => import('./communities/feature/lib.routes'),
+  },
+  {
     path: '**',
     pathMatch: 'full',
     redirectTo: 'home',

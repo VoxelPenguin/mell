@@ -1,31 +1,21 @@
 import {
-  Component,
-  signal,
   ChangeDetectionStrategy,
-  forwardRef,
-  output,
-  input,
-  effect,
-  model,
+  Component,
   computed,
+  forwardRef,
+  input,
+  model,
   OnInit,
+  signal,
 } from '@angular/core';
-import {
-  FormsModule,
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ButtonDirective } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import {
-  ArrowRight,
-  LucideAngularModule,
-  Navigation,
-  Search,
-} from 'lucide-angular';
+import { LucideAngularModule, Navigation, Search } from 'lucide-angular';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { FormValueControl } from '@angular/forms/signals';
+import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
 
 export interface LocationData {
   latitude: number;
@@ -56,6 +46,7 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
     LucideAngularModule,
     InputGroup,
     InputGroupAddon,
+    ErrorMessageComponent,
   ],
   providers: [
     {
@@ -108,11 +99,9 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
       </p-inputgroup>
 
       @if (errorMessage()) {
-        <div
-          class="rounded-lg border border-red-200 bg-red-50 px-3.5 py-3.5 text-sm text-red-800"
-        >
+        <mell-error-message>
           {{ errorMessage() }}
-        </div>
+        </mell-error-message>
       }
 
       <!-- Map -->

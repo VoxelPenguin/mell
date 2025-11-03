@@ -3,19 +3,33 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter, withHashLocation } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withHashLocation,
+  withInMemoryScrolling,
+} from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
 
 import { routes } from './app.routes';
+import { ConfirmationService } from 'primeng/api';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { harperCredentialsInterceptor } from './shared/data-access/harper-credentials.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withHashLocation()),
+    provideRouter(
+      routes,
+      withHashLocation(),
+      withComponentInputBinding(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+    ),
+    provideHttpClient(withInterceptors([harperCredentialsInterceptor])),
 
     // PrimeNG still uses deprecated Angular animations
     provideAnimationsAsync(),
@@ -24,21 +38,25 @@ export const appConfig: ApplicationConfig = {
         preset: definePreset(Aura, {
           semantic: {
             primary: {
-              50: '{orange.50}',
-              100: '{orange.100}',
-              200: '{orange.200}',
-              300: '{orange.300}',
-              400: '{orange.400}',
-              500: '{orange.500}',
-              600: '{orange.600}',
-              700: '{orange.700}',
-              800: '{orange.800}',
-              900: '{orange.900}',
+              50: '{orange.10}',
+              100: '{orange.200}',
+              200: '{orange.300}',
+              300: '{orange.400}',
+              400: '{orange.500}',
+              500: '{orange.600}',
+              600: '{orange.700}',
+              700: '{orange.800}',
+              800: '{orange.900}',
+              900: '{orange.950}',
               950: '{orange.950}',
             },
           },
         }),
+        options: {
+          darkModeSelector: false,
+        },
       },
     }),
+    ConfirmationService,
   ],
 };

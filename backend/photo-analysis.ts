@@ -1,4 +1,4 @@
-import { tables, Resource } from 'harperdb';
+import { Resource, tables } from 'harperdb';
 import { Community, IssueType } from '../types/db-types';
 // @ts-expect-error: :'-(
 import { RequestTarget } from 'harperdb/resources/RequestTarget';

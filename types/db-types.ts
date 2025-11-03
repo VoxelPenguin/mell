@@ -74,14 +74,7 @@ export type IssueInput = Omit<
 export type IssueSubmission = Required<
   Omit<
     Issue,
-    | 'id'
-    | 'type'
-    | 'community'
-    | 'status'
-    | 'submittedByEmail'
-    | 'numUpvotes'
-    | 'createdAt'
-    | 'updatedAt'
+    'id' | 'type' | 'community' | 'submittedByEmail' | 'createdAt' | 'updatedAt'
   >
 >;
 export type IssueTypeInput = Omit<

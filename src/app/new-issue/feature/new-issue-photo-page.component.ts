@@ -4,36 +4,25 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { FormProvider } from './form-provider';
-import { Community, IssueSubmission } from '../../../../types/db-types';
-import { NgOptimizedImage } from '@angular/common';
-import { SpeechBubbleComponent } from '../ui/speech-bubble.component';
 import { ButtonDirective } from 'primeng/button';
 import { resizeImageAndConvertToDataUrl } from '../../shared/util/image-helpers';
-import { comment } from 'postcss';
-import { compile } from 'tailwindcss';
 import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
+import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
+import { RouterLink } from '@angular/router';
+import { NewIssueFormService } from '../data-access/new-issue-form.service';
 
 @Component({
-  selector: 'mell-photo-page',
+  selector: 'mell-new-issue-photo-page',
   imports: [
-    NgOptimizedImage,
-    SpeechBubbleComponent,
     ButtonDirective,
     LucideAngularModule,
+    SpeechBubbleComponent,
+    RouterLink,
   ],
   template: `
-    <div class="flex items-start gap-6">
-      <img
-        ngSrc="/images/mell-base.png"
-        height="100"
-        width="100"
-        alt=""
-        priority
-      />
-
-      <mell-speech-bubble> Now, snap a photo of the issue</mell-speech-bubble>
-    </div>
+    <mell-speech-bubble>
+      Great! Now, snap a photo of the issue
+    </mell-speech-bubble>
 
     <input
       #photoInput
@@ -62,10 +51,10 @@ import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
           Retake
         </button>
 
-        <button pButton class="flex gap-2">
+        <a pButton class="flex gap-2" routerLink="../processing">
           Next
           <lucide-icon [img]="ArrowRight" size="20" />
-        </button>
+        </a>
       </div>
     } @else {
       <button
@@ -85,11 +74,10 @@ import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class ChooseCommunityPageComponent {
-  private readonly formProvider: FormProvider<IssueSubmission> =
-    inject(FormProvider);
+export default class NewIssuePhotoPageComponent {
+  private readonly newIssueFormService = inject(NewIssueFormService);
 
-  readonly formValue = this.formProvider.formValue;
+  readonly formValue = this.newIssueFormService.formValue;
 
   readonly photoUrl = computed(() => this.formValue().photoUrl);
 
@@ -111,10 +99,6 @@ export default class ChooseCommunityPageComponent {
       ...value,
       photoUrl,
     }));
-  }
-
-  next(): void {
-    // TODO: implement this
   }
 
   protected readonly ArrowRight = ArrowRight;
