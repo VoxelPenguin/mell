@@ -1,8 +1,8 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { NgOptimizedImage } from '@angular/common';
 import { interval, map, startWith } from 'rxjs';
 
 @Component({

@@ -1,9 +1,8 @@
 import { GoogleGenAI, Part, Type } from '@google/genai';
 import { Resource } from 'harperdb';
+import { RequestTarget } from '../node_modules/harperdb/resources/RequestTarget';
 import { PhotoAnalysisPayload } from '../types/api-types';
 import { IssueType } from '../types/db-types';
-// @ts-expect-error: :'-(
-import { RequestTarget } from 'harperdb/resources/RequestTarget';
 
 const PHOTO_ANALYSIS_PROMPT = `
   You are responsible for reviewing complaints submitted as images by concerned citizens.  Your job is to identify
@@ -30,7 +29,7 @@ export class PhotoAnalysis extends Resource {
     apiKey: process.env.GEMINI_API_KEY,
   });
 
-  override async post(_target: unknown, payload: PhotoAnalysisPayload) {
+  override async post(_target: RequestTarget, payload: PhotoAnalysisPayload) {
     const asyncIssueTypes: AsyncIterable<IssueType> = IssueTypeTable.search({
       conditions: [
         {

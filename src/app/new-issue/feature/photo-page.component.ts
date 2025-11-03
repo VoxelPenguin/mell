@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
 import { ButtonDirective } from 'primeng/button';
-import { PhotoAnalysisPayload } from '../../../../types/api-types';
-import { Issue, IssueSubmission } from '../../../../types/db-types';
-import { environment } from '../../../environments/environment';
 import {
   getMimeType,
   getRawImageData,
   resizeImageAndConvertToDataUrl,
-} from '../../shared/util/image-helpers';
+} from '../../../../helpers/image-helpers';
+import { PhotoAnalysisPayload } from '../../../../types/api-types';
+import { Issue, IssueSubmission } from '../../../../types/db-types';
+import { environment } from '../../../environments/environment';
 import { SpeechBubbleComponent } from '../ui/speech-bubble.component';
 import { FormProvider } from './form-provider';
 
