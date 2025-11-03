@@ -1,24 +1,4 @@
 /**
- * Encodes a file as a base-64 URL of the form `data:<mime-type>;base64,<data>`.
- *
- * @param file The file to process.
- *
- * @returns A Promise which resolves to a base-64 URL representation of the image.
- */
-export function encodeImageAsBase64Url(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      resolve(reader.result as string);
-    };
-
-    reader.onerror = reject;
-  });
-}
-
-/**
  * Extracts the MIME type of a base-64 encoded image.
  *
  * @param base64ImageUrl

@@ -10,10 +10,9 @@ import {
   withInMemoryScrolling,
 } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
-
+import Aura from '@primeuix/themes/aura';
+import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import { ConfirmationService } from 'primeng/api';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -30,6 +29,7 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideHttpClient(withInterceptors([harperCredentialsInterceptor])),
+    provideHttpClient(),
 
     // PrimeNG still uses deprecated Angular animations
     provideAnimationsAsync(),
@@ -38,7 +38,7 @@ export const appConfig: ApplicationConfig = {
         preset: definePreset(Aura, {
           semantic: {
             primary: {
-              50: '{orange.10}',
+              50: '{orange.100}',
               100: '{orange.200}',
               200: '{orange.300}',
               300: '{orange.400}',
