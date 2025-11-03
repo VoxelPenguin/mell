@@ -1,21 +1,21 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   provideRouter,
   withComponentInputBinding,
   withHashLocation,
   withInMemoryScrolling,
 } from '@angular/router';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { ConfirmationService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
-import { ConfirmationService } from 'primeng/api';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { harperCredentialsInterceptor } from './shared/data-access/harper-credentials.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -29,7 +29,6 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideHttpClient(withInterceptors([harperCredentialsInterceptor])),
-    provideHttpClient(),
 
     // PrimeNG still uses deprecated Angular animations
     provideAnimationsAsync(),

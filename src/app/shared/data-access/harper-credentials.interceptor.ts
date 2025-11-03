@@ -1,7 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const harperCredentialsInterceptor: HttpInterceptorFn = (req, next) => {
-  req.headers.set('Authorization', 'Basic ' + btoa('public:public'));
+  const reqWithHeader = req.clone({
+    headers: req.headers.set(
+      'Authorization',
+      'Basic ' + btoa('public:public123'),
+    ),
+  });
 
-  return next(req);
+  return next(reqWithHeader);
 };

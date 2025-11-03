@@ -2,19 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  forwardRef,
   input,
   model,
   OnInit,
   signal,
 } from '@angular/core';
-import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ButtonDirective } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { LucideAngularModule, Navigation, Search } from 'lucide-angular';
+import { ButtonDirective } from 'primeng/button';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { FormValueControl } from '@angular/forms/signals';
+import { InputTextModule } from 'primeng/inputtext';
 import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
 
 export interface LocationData {
@@ -47,13 +46,6 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
     InputGroup,
     InputGroupAddon,
     ErrorMessageComponent,
-  ],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LocationPickerComponent),
-      multi: true,
-    },
   ],
   template: `
     <div class="flex flex-col gap-4">
