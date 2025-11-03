@@ -1,5 +1,5 @@
 import { Router, Routes } from '@angular/router';
-import { allCommunitiesResolver } from '../data-access/all-communities.resolver';
+import { communitiesWithinRangeResolver } from '../data-access/communities-within-range.resolver';
 import { issueTypesResolver } from '../data-access/issue-types.resolver';
 import { issueResolver } from '../data-access/issue.resolver';
 import { NewIssueFormService } from '../data-access/new-issue-form.service';
@@ -23,7 +23,7 @@ const newIssueRoutes: Routes = [
       {
         path: 'community',
         loadComponent: () => import('./new-issue-community-page.component'),
-        resolve: { communities: allCommunitiesResolver },
+        resolve: { communities: communitiesWithinRangeResolver },
         canActivate: [
           // if the address is invalid, redirect back to the location step
           () =>

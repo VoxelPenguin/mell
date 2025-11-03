@@ -8,6 +8,12 @@ import {
 } from '../../../../types/db-types';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
+import {
+  getMimeType,
+  getRawImageData,
+} from '../../../../helpers/image-helpers';
+
+class PhotoAnalysisPayload {}
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +21,31 @@ import { firstValueFrom } from 'rxjs';
 export class ApiService {
   private readonly http = inject(HttpClient);
 
-  submitNewIssue(formModel: NewIssueFormModel): Promise<Issue['id']> {
+  getAiGeneratedIssueTypeAndDescriptionFromPhoto(
+    formValue: Pick<NewIssueFormModel, 'photoUrl' | 'communityId'>,
+  ): Promise<Pick<Required<Issue>, 'typeId' | 'description'>> {
+    const payload: PhotoAnalysisPayload = {
+      imageData: getRawImageData(formValue.photoUrl),
+      imageMimeType: getMimeType(formValue.photoUrl),
+      communityId: formValue.communityId,
+    };
+
+    return firstValueFrom(
+      this.http.post<Pick<Required<Issue>, 'typeId' | 'description'>>(
+        `${environment.harperApiUrl}/PhotoAnalysis`,
+        payload,
+      ),
+    );
+  }
+
+  submitNewIssue(formValue: NewIssueFormModel): Promise<Issue['id']> {
     const submission: IssueSubmission = {
-      address: formModel.location.address,
-      coordinates: [formModel.location.latitude, formModel.location.longitude],
-      communityId: formModel.communityId,
-      photoUrl: formModel.photoUrl,
-      typeId: formModel.typeId,
-      description: formModel.description,
+      address: formValue.location.address,
+      coordinates: [formValue.location.latitude, formValue.location.longitude],
+      communityId: formValue.communityId,
+      photoUrl: formValue.photoUrl,
+      typeId: formValue.typeId,
+      description: formValue.description,
       status: IssueStatus.Open,
       numUpvotes: 1,
       otherTypeName: '', // TODO: remove this?

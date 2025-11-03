@@ -5,11 +5,11 @@ import {
   inject,
 } from '@angular/core';
 import { ButtonDirective } from 'primeng/button';
-import { resizeImageAndConvertToDataUrl } from '../../shared/util/image-helpers';
 import { ArrowRight, Camera, LucideAngularModule } from 'lucide-angular';
 import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 import { RouterLink } from '@angular/router';
 import { NewIssueFormService } from '../data-access/new-issue-form.service';
+import { resizeImageAndConvertToDataUrl } from '../../../../helpers/image-helpers';
 
 @Component({
   selector: 'mell-new-issue-photo-page',

@@ -5,27 +5,56 @@ import {
   inject,
   input,
   OnInit,
+  signal,
 } from '@angular/core';
 import { IssueType } from '../../../../types/db-types';
 import { Router } from '@angular/router';
 import { NewIssueFormService } from '../data-access/new-issue-form.service';
+import { ApiService } from '../../shared/data-access/api.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
+import { JsonPipe } from '@angular/common';
+import { Button } from 'primeng/button';
+import { LucideAngularModule, RotateCcw } from 'lucide-angular';
 
 @Component({
   selector: 'mell-new-issue-processing-page',
-  imports: [],
+  imports: [ErrorMessageComponent, JsonPipe, Button, LucideAngularModule],
   template: `
     <div class="speech-bubble p-4">
-      <p>Alright, let's have a look...</p>
-      <p>This will only take a moment...</p>
+      @if (errorMessage()) {
+        Uh oh...
+      } @else {
+        <p>Alright, let's have a look...</p>
+        <p>This will only take a moment...</p>
+      }
     </div>
 
     <div class="flex items-center justify-center gap-3">
-      <div class="scan flex w-2/5 items-center p-4">
+      <div class="flex w-2/5 items-center p-4" [class.scan]="analyzing()">
         <img [src]="photoUrl()" class="w-full rounded-xl shadow-lg" alt="" />
       </div>
 
       <img src="/images/mell-base.png" class="w-2/5" alt="" />
     </div>
+
+    @if (errorMessage()) {
+      <mell-error-message>
+        {{ errorMessage() | json }}
+
+        <p-button
+          severity="danger"
+          [loading]="analyzing()"
+          label="Try again"
+          (onClick)="analyzePhoto()"
+          styleClass="block mt-3 w-full"
+        >
+          <ng-template #icon>
+            <lucide-icon [img]="RotateCcw" size="20" />
+          </ng-template>
+        </p-button>
+      </mell-error-message>
+    }
   `,
   styles: `
     .speech-bubble {
@@ -93,6 +122,7 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
 })
 export default class NewIssueProcessingPageComponent implements OnInit {
   private readonly newIssueFormService = inject(NewIssueFormService);
+  private readonly api = inject(ApiService);
   private readonly router = inject(Router);
 
   readonly issueTypes = input.required<IssueType[]>();
@@ -101,15 +131,17 @@ export default class NewIssueProcessingPageComponent implements OnInit {
 
   readonly photoUrl = computed(() => this.formValue().photoUrl);
 
-  ngOnInit(): void {
-    // TODO: send to AI
+  readonly analyzing = signal(false);
+  readonly errorMessage = signal<unknown>(null);
 
-    // fake 3-second delay
-    setTimeout(() => {
-      // fake response from AI
-      const typeId = this.issueTypes()[0].id;
-      const description =
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit, ante in aliquam vehicula, augue magna rutrum odio, vitae luctus velit sapien at neque. Nunc ut condimentum orci, eget lobortis turpis.';
+  async analyzePhoto() {
+    this.analyzing.set(true);
+
+    try {
+      const { typeId, description } =
+        await this.api.getAiGeneratedIssueTypeAndDescriptionFromPhoto(
+          this.formValue(),
+        );
 
       this.formValue.update((value) => ({
         ...value,
@@ -120,6 +152,17 @@ export default class NewIssueProcessingPageComponent implements OnInit {
       void this.router.navigateByUrl(`/new-issue/review`, {
         replaceUrl: true,
       });
-    }, 5000);
+    } catch (error: unknown) {
+      this.analyzing.set(false);
+      this.errorMessage.set(
+        error instanceof HttpErrorResponse ? error.error : error,
+      );
+    }
   }
+
+  ngOnInit(): void {
+    void this.analyzePhoto();
+  }
+
+  protected readonly RotateCcw = RotateCcw;
 }
