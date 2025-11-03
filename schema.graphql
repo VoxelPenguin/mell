@@ -10,7 +10,6 @@ type Issue @table(audit: true) @sealed @export {
   communityId: ID! @indexed
   community: Community @relationship(from: communityId)
   status: IssueStatus!
-  submittedByEmail: String @indexed
   numUpvotes: Int!
   createdAt: Date @createdTime
   updatedAt: Date @updatedTime
