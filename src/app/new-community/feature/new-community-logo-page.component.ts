@@ -37,7 +37,6 @@ import { JsonPipe } from '@angular/common';
       accept="image/*"
       name="photo"
       required
-      capture="environment"
       class="hidden"
       (change)="onImageChange($event)"
     />
