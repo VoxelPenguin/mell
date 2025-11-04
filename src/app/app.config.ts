@@ -12,13 +12,13 @@ import {
   withHashLocation,
   withInMemoryScrolling,
 } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import { harperCredentialsInterceptor } from './shared/data-access/harper-credentials.interceptor';
-import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -64,5 +64,6 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     ConfirmationService,
+    MessageService,
   ],
 };

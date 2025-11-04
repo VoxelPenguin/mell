@@ -6,6 +6,15 @@ import {
 } from '@angular/core';
 import { IssueStatus } from '../../../../types/db-types';
 
+export const statusToDisplayText: Record<IssueStatus, string> = {
+  [IssueStatus.Open]: 'Open',
+  [IssueStatus.UnderReview]: 'Under Review',
+  [IssueStatus.Scheduled]: 'Scheduled',
+  [IssueStatus.InProgress]: 'In Progress',
+  [IssueStatus.Completed]: 'Completed',
+  [IssueStatus.NotPlanned]: 'Not Planned',
+};
+
 @Component({
   selector: 'mell-issue-status-pill',
   template: ` <p
@@ -34,18 +43,10 @@ export class IssueStatusPillComponent {
   readonly status = input.required<IssueStatus>();
   readonly showPrefix = input<boolean>(false);
 
-  readonly statusToDisplayText: Record<IssueStatus, string> = {
-    [IssueStatus.Open]: 'Open',
-    [IssueStatus.UnderReview]: 'Under Review',
-    [IssueStatus.Scheduled]: 'Scheduled',
-    [IssueStatus.InProgress]: 'In Progress',
-    [IssueStatus.Completed]: 'Completed',
-    [IssueStatus.NotPlanned]: 'Not Planned',
-  };
-
   readonly statusDisplayText = computed(
     () => this.statusToDisplayText[this.status()],
   );
 
   protected readonly IssueStatus = IssueStatus;
+  protected readonly statusToDisplayText = statusToDisplayText;
 }

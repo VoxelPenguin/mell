@@ -12,13 +12,18 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
+import { MessageService } from 'primeng/api';
 import { ImageModule } from 'primeng/image';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 import { Community, Issue, IssueStatus } from '../../../../types/db-types';
 import { ApiService } from '../../shared/data-access/api.service';
-import { IssueStatusPillComponent } from '../../shared/ui/issue-status-pill.component';
+import {
+  IssueStatusPillComponent,
+  statusToDisplayText,
+} from '../../shared/ui/issue-status-pill.component';
 import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 
 @Component({
@@ -35,6 +40,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     RouterLink,
     LucideAngularModule,
     DatePipe,
+    ToastModule,
   ],
   template: `
     <!-- Back Button -->
@@ -77,18 +83,6 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
                   Status <p-sortIcon field="status" />
                 </th>
               </tr>
-              <tr class="border-0">
-                <th colspan="6" class="border-0 !p-0">
-                  @if (statusChangesInProgress().size > 0) {
-                    <p-progressbar
-                      mode="indeterminate"
-                      [style]="{ height: '4px' }"
-                    />
-                  } @else {
-                    <div class="h-[4px]"></div>
-                  }
-                </th>
-              </tr>
             </ng-template>
             <ng-template #body let-issue let-first="first">
               <tr>
@@ -117,7 +111,6 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
                     class="w-full !border-transparent !shadow-none hover:!border-current focus:!border-current active:!border-current"
                     [options]="issueStatuses"
                     [(ngModel)]="issueStatusModels()[issue.id]"
-                    [disabled]="statusChangesInProgress().has(issue.id)"
                     placeholder="Status"
                     appendTo="body"
                     (onChange)="onStatusChange(issue, $event.value)"
@@ -150,6 +143,8 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     } @else {
       <p>Error loading community data, please try again.</p>
     }
+
+    <p-toast position="bottom-right" />
   `,
   styles: [
     `
@@ -215,6 +210,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 })
 export default class CommunityDashboardPageComponent {
   private readonly api = inject(ApiService);
+  private readonly messageService = inject(MessageService);
 
   readonly issues = input.required<Issue[]>();
   readonly community = input.required<Community>();
@@ -231,24 +227,16 @@ export default class CommunityDashboardPageComponent {
     ),
   );
 
-  readonly statusChangesInProgress = signal(new Set<Issue['id']>());
-
   async onStatusChange(
     issue: Issue,
     newStatus: Issue['status'],
   ): Promise<void> {
-    this.statusChangesInProgress.update((prev) => {
-      const newSet = prev;
-      newSet.add(issue.id);
-      return newSet;
-    });
-
     await this.api.updateIssue({ ...issue, status: newStatus });
 
-    this.statusChangesInProgress.update((prev) => {
-      const newSet = prev;
-      newSet.delete(issue.id);
-      return newSet;
+    this.messageService.add({
+      summary: 'Success',
+      detail: `Issue status changed to ${statusToDisplayText[newStatus]}`,
+      severity: 'success',
     });
   }
 
