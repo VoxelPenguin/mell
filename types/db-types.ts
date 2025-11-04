@@ -29,8 +29,6 @@ export interface Issue {
 
 export interface IssueType {
   id: string;
-  communityId: string;
-  community: Community;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -42,7 +40,6 @@ export interface Community {
   logoUrl?: string;
   geographicCenter: [number, number]; // [longitude, latitude]
   radiusMeters: number;
-  issueTypes: IssueType[];
   issues: Issue[];
   createdAt: string;
   updatedAt: string;

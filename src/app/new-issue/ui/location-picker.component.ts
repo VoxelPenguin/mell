@@ -9,7 +9,12 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
-import { LucideAngularModule, Navigation, Search } from 'lucide-angular';
+import {
+  Loader,
+  LucideAngularModule,
+  Navigation,
+  Search,
+} from 'lucide-angular';
 import { ButtonDirective } from 'primeng/button';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
@@ -56,13 +61,15 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
         (click)="useCurrentLocation()"
         [disabled]="isLoadingLocation()"
       >
+        <lucide-icon
+          [img]="navigationIcon()"
+          size="20"
+          [class.animate-spin]="isLoadingLocation()"
+        />
         @if (isLoadingLocation()) {
-          <span
-            class="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
-          ></span>
-          <span>Locating...</span>
+          Locating...
         } @else {
-          <lucide-icon [img]="Navigation" size="20" /> Use My Location
+          Use My Location
         }
       </button>
 
@@ -85,7 +92,11 @@ const NOMANATIM_USER_AGENT = 'Mell - Smart Community Issue Reporting';
             (click)="searchAddress()"
             [disabled]="isSearching()"
           >
-            <lucide-icon [img]="Search" size="20" />
+            <lucide-icon
+              [img]="searchIcon()"
+              size="20"
+              [class.animate-spin]="isSearching()"
+            />
           </button>
         </p-inputgroup-addon>
       </p-inputgroup>
@@ -144,6 +155,13 @@ export class LocationPickerComponent
   readonly errorMessage = signal('');
 
   readonly currentAddress = computed(() => this.value().address);
+  readonly navigationIcon = computed(() =>
+    this.isLoadingLocation() ? Loader : Navigation,
+  );
+  readonly searchIcon = computed(() => (this.isSearching() ? Loader : Search));
+
+  private mapMoveWasFromAddressSearch = false;
+  private mapMoveWasFromZoom = false;
 
   // Leaflet map instance
   private map: any = null;
@@ -299,13 +317,13 @@ export class LocationPickerComponent
 
       // Update map view
       if (this.map) {
+        // hacky way to prevent the address from loading twice...
+        this.mapMoveWasFromAddressSearch = true;
+        setTimeout(() => {
+          this.mapMoveWasFromAddressSearch = false;
+        }, 100);
+
         this.map.setView([parseFloat(result.lat), parseFloat(result.lon)], 15);
-        if (this.marker) {
-          this.marker.setLatLng([
-            parseFloat(result.lat),
-            parseFloat(result.lon),
-          ]);
-        }
       }
     } catch (error) {
       this.errorMessage.set('Error searching for address. Please try again.');
@@ -357,7 +375,17 @@ export class LocationPickerComponent
         }));
       });
 
+      this.map.on('zoomend', () => {
+        // hacky way to prevent the address from loading after a zoom in/out...
+        this.mapMoveWasFromZoom = true;
+        setTimeout(() => {
+          this.mapMoveWasFromZoom = false;
+        }, 100);
+      });
+
       this.map.on('moveend', async () => {
+        if (this.mapMoveWasFromAddressSearch || this.mapMoveWasFromZoom) return;
+
         await this.reverseGeocode(
           this.value().latitude,
           this.value().longitude,
@@ -398,5 +426,4 @@ export class LocationPickerComponent
   }
 
   protected readonly Navigation = Navigation;
-  protected readonly Search = Search;
 }

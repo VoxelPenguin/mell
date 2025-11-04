@@ -12,8 +12,7 @@ import {
   getMimeType,
   getRawImageData,
 } from '../../../../helpers/image-helpers';
-
-class PhotoAnalysisPayload {}
+import { PhotoAnalysisPayload } from '../../../../types/api-types';
 
 @Injectable({
   providedIn: 'root',
@@ -22,12 +21,11 @@ export class ApiService {
   private readonly http = inject(HttpClient);
 
   getAiGeneratedIssueTypeAndDescriptionFromPhoto(
-    formValue: Pick<NewIssueFormModel, 'photoUrl' | 'communityId'>,
+    photoUrl: NewIssueFormModel['photoUrl'],
   ): Promise<Pick<Required<Issue>, 'typeId' | 'description'>> {
     const payload: PhotoAnalysisPayload = {
-      imageData: getRawImageData(formValue.photoUrl),
-      imageMimeType: getMimeType(formValue.photoUrl),
-      communityId: formValue.communityId,
+      imageData: getRawImageData(photoUrl),
+      imageMimeType: getMimeType(photoUrl),
     };
 
     return firstValueFrom(

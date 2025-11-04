@@ -140,7 +140,7 @@ export default class NewIssueProcessingPageComponent implements OnInit {
     try {
       const { typeId, description } =
         await this.api.getAiGeneratedIssueTypeAndDescriptionFromPhoto(
-          this.formValue(),
+          this.photoUrl(),
         );
 
       this.formValue.update((value) => ({

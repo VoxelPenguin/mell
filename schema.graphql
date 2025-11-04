@@ -24,10 +24,8 @@ enum IssueStatus {
   NotPlanned
 }
 
-type IssueType @table @sealed @export {
+type IssueType @table @export {
   id: ID @primaryKey
-  communityId: ID! @indexed
-  community: Community! @relationship(from: communityId)
   name: String! @indexed
   createdAt: Date @createdTime
   updatedAt: Date @updatedTime
@@ -41,24 +39,6 @@ type Community @table @sealed @export {
   radiusMeters: Int!
   issueTypes: [IssueType!]! @relationship(to: communityId)
   issues: [Issue!]! @relationship(to: communityId)
-  createdAt: Date @createdTime
-  updatedAt: Date @updatedTime
-}
-
-type User @table @sealed {
-  id: ID @primaryKey
-  name: String!
-  email: String!
-  password: String!
-  createdAt: Date @createdTime
-  updatedAt: Date @updatedTime
-}
-
-type Session @table @sealed {
-  id: ID @primaryKey
-  userId: ID! @indexed
-  user: User! @relationship(from: userId)
-  token: String!
   createdAt: Date @createdTime
   updatedAt: Date @updatedTime
 }

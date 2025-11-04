@@ -20,3 +20,14 @@
 body {
   color: var(--color-primary-950);
 }
+
+.p-select-option,
+.p-select-label {
+  white-space: normal !important;
+}
+
+p-select {
+  .p-overlay {
+    width: 100%;
+  }
+}

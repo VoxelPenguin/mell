@@ -14,8 +14,9 @@ const PHOTO_ANALYSIS_PROMPT = `
   typeId: The ID of the issue type matching the provided image.  This should use the ID field of one of the
   provided issues types.
 
-  description: A short description of the issue.  The description should be concise and professional, and it should
-  not use any special formatting (e.g. markdown or HTML).
+  description: A short description of the issue, written form the perspective of the concerned citizen taking the photo.
+  The description should be concise and professional. It should describe what is in the photo and briefly explain why it
+  should be fixed. It should not use any special formatting (ie, no markdown or HTML).
 
   These are the available issue types:
   {{issueTypes}}
@@ -31,22 +32,18 @@ export class PhotoAnalysis extends Resource {
 
   override async post(_target: RequestTarget, payload: PhotoAnalysisPayload) {
     const asyncIssueTypes: AsyncIterable<IssueType> = IssueTypeTable.search({
-      conditions: [
-        {
-          attribute: 'communityId',
-          comparator: 'equals',
-          value: payload.communityId,
-        },
-      ],
+      select: ['id', 'name'],
     } as RequestTarget);
 
     const issueTypes = await Array.fromAsync(asyncIssueTypes);
+
+    const issueTypeIds = issueTypes.map((issueType) => issueType.id);
 
     const contents: Part[] = [
       {
         text: PHOTO_ANALYSIS_PROMPT.replace(
           '{{issueTypes}}',
-          JSON.stringify(issueTypes),
+          JSON.stringify(issueTypes, undefined, 2),
         ),
       },
       {
@@ -67,6 +64,7 @@ export class PhotoAnalysis extends Resource {
           properties: {
             typeId: {
               type: Type.STRING,
+              enum: [issueTypeIds],
             },
             description: {
               type: Type.STRING,
