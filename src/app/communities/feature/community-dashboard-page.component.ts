@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,6 +34,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     ProgressBarModule,
     RouterLink,
     LucideAngularModule,
+    DatePipe,
   ],
   template: `
     <!-- Back Button -->
@@ -65,19 +67,18 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
                 <th class="w-[15rem]" pSortableColumn="type.name">
                   Type <p-sortIcon field="type.name" />
                 </th>
-
-                <th class="w-[25rem]">Description</th>
-
+                <th class="w-[10rem]">Photo</th>
                 <th class="w-[15rem]" pSortableColumn="address">
                   Address <p-sortIcon field="address" />
                 </th>
-                <th class="w-[10rem]">Photo</th>
+                <th class="w-[10rem]">Submitted On</th>
+                <th class="w-[25rem]">Description</th>
                 <th class="w-[15rem]" pSortableColumn="status">
                   Status <p-sortIcon field="status" />
                 </th>
               </tr>
               <tr class="border-0">
-                <th colspan="5" class="border-0 !p-0">
+                <th colspan="6" class="border-0 !p-0">
                   @if (statusChangesInProgress().size > 0) {
                     <p-progressbar
                       mode="indeterminate"
@@ -98,8 +99,6 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
                     <span class="text-gray-400 italic">Unknown</span>
                   }
                 </td>
-                <td>{{ issue.description }}</td>
-                <td>{{ issue.address }}</td>
                 <td>
                   <p-image
                     [src]="issue.photoUrl"
@@ -110,9 +109,12 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
                     imageClass="rounded-md"
                   />
                 </td>
+                <td>{{ issue.address }}</td>
+                <td>{{ issue.createdAt | date }}</td>
+                <td>{{ issue.description }}</td>
                 <td>
                   <p-select
-                    class="w-full"
+                    class="w-full !border-transparent !shadow-none hover:!border-current focus:!border-current active:!border-current"
                     [options]="issueStatuses"
                     [(ngModel)]="issueStatusModels()[issue.id]"
                     [disabled]="statusChangesInProgress().has(issue.id)"
@@ -198,6 +200,14 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 
       :host ::ng-deep .p-image img {
         border-radius: 0.375rem;
+      }
+
+      :host ::ng-deep .p-select-dropdown-icon {
+        visibility: hidden;
+      }
+
+      :host ::ng-deep .p-select:hover .p-select-dropdown-icon {
+        visibility: visible;
       }
     `,
   ],

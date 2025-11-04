@@ -8,7 +8,7 @@ import {
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
+import { ArrowLeft, LucideAngularModule, Search } from 'lucide-angular';
 import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime } from 'rxjs';
 import { Community } from '../../../../types/db-types';
@@ -31,17 +31,22 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
       <lucide-icon [img]="ArrowLeft" />
     </a>
 
-    <mell-speech-bubble class="self-start"
-      >Let's find your community.</mell-speech-bubble
-    >
+    <div class="mb-4 flex w-full flex-col items-center gap-10">
+      <!-- Speech bubble -->
+      <mell-speech-bubble>Let's find your community.</mell-speech-bubble>
 
-    <input
-      pInputText
-      class="w-[30rem] self-start"
-      type="text"
-      placeholder="Start typing a community name"
-      [(ngModel)]="searchString"
-    />
+      <!-- Search input -->
+      <div class="flex w-full items-center gap-2">
+        <lucide-icon [img]="Search" class="text-neutral-500" />
+        <input
+          pInputText
+          class="grow-1"
+          type="text"
+          placeholder="Start typing a community name"
+          [(ngModel)]="searchString"
+        />
+      </div>
+    </div>
 
     <div class="flex w-full flex-col gap-3">
       @for (community of communities(); track community.id) {
@@ -69,7 +74,7 @@ export default class CommunitiesSearchPageComponent {
   readonly searchString = signal('');
 
   readonly searchNavigationSubscription = toObservable(this.searchString)
-    .pipe(takeUntilDestroyed(), debounceTime(500))
+    .pipe(takeUntilDestroyed(), debounceTime(250))
     .subscribe((searchString) =>
       this.router.navigate([`../${searchString}`], {
         relativeTo: this.route,
@@ -81,4 +86,5 @@ export default class CommunitiesSearchPageComponent {
   }
 
   protected readonly ArrowLeft = ArrowLeft;
+  protected readonly Search = Search;
 }

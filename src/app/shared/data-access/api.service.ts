@@ -80,7 +80,7 @@ export class ApiService {
     );
   }
 
-  updateIssue(updatedIssue: Issue): Promise<unknown> {
+  updateIssue(updatedIssue: Issue): Promise<void> {
     // server will return an error if a computed field is included
     const updatedIssueWithoutComputedProperties = {
       ...updatedIssue,
@@ -90,7 +90,7 @@ export class ApiService {
     };
 
     return firstValueFrom(
-      this.http.put<unknown>(
+      this.http.put<void>(
         `${environment.harperApiUrl}/Issue/${updatedIssueWithoutComputedProperties.id}`,
         updatedIssueWithoutComputedProperties,
       ),
