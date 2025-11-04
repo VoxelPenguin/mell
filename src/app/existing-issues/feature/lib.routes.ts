@@ -1,18 +1,16 @@
 import { Routes } from '@angular/router';
+import { issueResolver } from '../data-access/issue.resolver';
 
 const existingIssuesRoutes: Routes = [
-  // {
-  //   path: 'map',
-  //   loadComponent: () => import('./existing-issues-map-page.component'),
-  // },
-  // {
-  //   path: 'issue/:issueId',
-  //   loadComponent: () => import('./existing-issues-issue-page.component'),
-  // },
+  {
+    path: '',
+    loadComponent: () => import('./existing-issues-page.component'),
+    resolve: { issues: issueResolver },
+  },
   {
     path: '**',
     pathMatch: 'full',
-    redirectTo: 'map',
+    redirectTo: '',
   },
 ];
 

@@ -18,7 +18,7 @@ export interface Issue {
   coordinates: [number, number]; // [longitude, latitude]
   address: string; // [longitude, latitude]
   communityId: string;
-  community: Community;
+  community?: Community;
   status: IssueStatus;
   submittedByEmail?: string;
   numUpvotes: number;
