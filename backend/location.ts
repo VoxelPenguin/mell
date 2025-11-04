@@ -30,11 +30,10 @@ export class Location extends Resource {
         sort: {
           attribute: 'geographicCenter',
           // @ts-expect-error: this is pulled directly from the docs, but the types
-          // don't seem to be support for vector indexing.
+          // don't seem to be supported for vector indexing.
           // https://docs.harperdb.io/docs/developers/applications/defining-schemas#vector-indexing
           target: [latitude, longitude],
         },
-        type: 'euclidean',
         limit: 5,
       });
 

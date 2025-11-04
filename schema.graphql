@@ -35,7 +35,7 @@ type Community @table @sealed @export {
   id: ID @primaryKey
   name: String! @indexed
   logoUrl: String
-  geographicCenter: [Float!]! @indexed(type: "HNSW")
+  geographicCenter: [Float!]! @indexed(type: "HNSW", distance: "euclidean")
   radiusMeters: Int!
   issueTypes: [IssueType!]! @relationship(to: communityId)
   issues: [Issue!]! @relationship(to: communityId)
