@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NewIssueFormModel } from '../../new-issue/feature/new-issue-page.component';
 import {
+  Community,
+  CommunitySubmission,
   Issue,
   IssueStatus,
   IssueSubmission,
@@ -13,6 +15,7 @@ import {
   getRawImageData,
 } from '../../../../helpers/image-helpers';
 import { PhotoAnalysisPayload } from '../../../../types/api-types';
+import { NewCommunityFormModel } from '../../new-community/feature/new-community-page.component';
 
 @Injectable({
   providedIn: 'root',
@@ -46,12 +49,32 @@ export class ApiService {
       description: formValue.description,
       status: IssueStatus.Open,
       numUpvotes: 1,
-      otherTypeName: '', // TODO: remove this?
     };
 
     return firstValueFrom(
       this.http.post<Issue['id']>(
         `${environment.harperApiUrl}/Issue/`,
+        submission,
+      ),
+    );
+  }
+
+  createNewCommunity(
+    formValue: NewCommunityFormModel,
+  ): Promise<Community['id']> {
+    const submission: CommunitySubmission = {
+      geographicCenter: [
+        formValue.location.latitude,
+        formValue.location.longitude,
+      ],
+      radiusMeters: formValue.location.radiusMeters,
+      name: formValue.name,
+      logoUrl: formValue.logoUrl,
+    };
+
+    return firstValueFrom(
+      this.http.post<Community['id']>(
+        `${environment.harperApiUrl}/Community/`,
         submission,
       ),
     );

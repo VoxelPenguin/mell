@@ -1,9 +1,8 @@
-type Issue @table(audit: true) @sealed @export {
+type Issue @table(audit: true) @export {
   id: ID @primaryKey
   photoUrl: String!
   typeId: ID @indexed
   type: IssueType @relationship(from: typeId)
-  otherTypeName: String
   description: String!
   coordinates: [Float!]! @indexed(type: "HNSW")
   address: String!

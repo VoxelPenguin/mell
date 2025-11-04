@@ -11,6 +11,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 import { ButtonDirective } from 'primeng/button';
 import { Router, RouterLink } from '@angular/router';
 import { NewIssueFormService } from '../data-access/new-issue-form.service';
+import { CommunityComponent } from '../../shared/ui/community.component';
 
 @Component({
   selector: 'mell-new-issue-choose-community-page',
@@ -19,12 +20,13 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
     SpeechBubbleComponent,
     ButtonDirective,
     RouterLink,
+    CommunityComponent,
   ],
   template: `
     @if (multipleMatchingCommunities()) {
       <mell-speech-bubble imageUrl="/images/mell-pirate.png">
-        It looks like this location is within multiple communities! Which
-        community should we report the issue to?
+        It looks like this is within multiple communities! Which community
+        should we report the issue to?
       </mell-speech-bubble>
 
       @for (community of communities(); track community.id) {
@@ -61,17 +63,10 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
         >. Is that correct?
       </mell-speech-bubble>
 
-      <div
-        class="flex flex-col items-center gap-4 self-center rounded-2xl bg-white p-6"
-      >
-        @if (firstCommunity().logoUrl; as logoUrl) {
-          <img [src]="logoUrl" class="size-30 rounded-full" alt="" />
-        }
-
-        <p class="text-center text-xl font-bold text-balance">
-          {{ firstCommunity().name }}
-        </p>
-      </div>
+      <mell-community
+        [name]="firstCommunity().name"
+        [logoUrl]="firstCommunity().logoUrl"
+      />
 
       <button pButton (click)="chooseCommunity(firstCommunity().id)">
         Yes
@@ -91,6 +86,10 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
       </mell-speech-bubble>
 
       <a pButton routerLink="/new-community">Yes, create new community</a>
+
+      <button pButton class="p-button-secondary" (click)="goBack()">
+        No, go back
+      </button>
     }
   `,
   host: {
@@ -121,5 +120,9 @@ export default class NewIssueCommunityPageComponent {
       communityId,
     }));
     void this.router.navigateByUrl(`/new-issue/photo`);
+  }
+
+  goBack(): void {
+    window.history.back();
   }
 }

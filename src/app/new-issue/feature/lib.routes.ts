@@ -51,8 +51,6 @@ const newIssueRoutes: Routes = [
       {
         path: 'processing',
         loadComponent: () => import('./new-issue-processing-page.component'),
-        // TODO: remove this resolver when we actually make a call to the AI backend endpoint
-        resolve: { issueTypes: issueTypesResolver },
         canActivate: [
           // if the photoUrl is invalid, redirect back to the photo step
           () =>

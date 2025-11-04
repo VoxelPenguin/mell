@@ -12,7 +12,7 @@ import { Select } from 'primeng/select';
 import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 import { Field } from '@angular/forms/signals';
 import { LucideAngularModule, Send } from 'lucide-angular';
-import { ButtonDirective } from 'primeng/button';
+import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { ApiService } from '../../shared/data-access/api.service';
 import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
@@ -26,10 +26,10 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
     SpeechBubbleComponent,
     Field,
     LucideAngularModule,
-    ButtonDirective,
     InputText,
     ErrorMessageComponent,
     JsonPipe,
+    Button,
   ],
   template: `
     <mell-speech-bubble>
@@ -46,6 +46,7 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
         inputId="issue-type"
         [options]="issueTypes()"
         [field]="form.typeId"
+        [disabled]="submitting()"
         class="w-full"
         optionLabel="name"
         optionValue="id"
@@ -54,15 +55,16 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
 
     <!-- Description -->
     <div class="flex w-full flex-col gap-1">
-      <label for="description" class="text-sm font-semibold"
-        >Details (optional)</label
-      >
+      <label for="description" class="text-sm font-semibold">
+        Details (optional)
+      </label>
       <textarea
         pInputText
         rows="6"
         cols="20"
         id="description"
         [field]="form.description"
+        [disabled]="submitting()"
         class="p-component p-textarea w-full"
       ></textarea>
     </div>
@@ -73,14 +75,17 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
       </mell-error-message>
     }
 
-    <button
-      pButton
-      class="flex gap-3"
+    <p-button
       [disabled]="form().invalid()"
-      (click)="submit()"
+      [loading]="submitting()"
+      (onClick)="submit()"
+      label="Submit"
+      styleClass="w-full"
     >
-      Submit <lucide-icon [img]="Send" size="20" />
-    </button>
+      <ng-template #icon>
+        <lucide-icon [img]="Send" size="20" />
+      </ng-template>
+    </p-button>
   `,
   host: {
     class: 'flex flex-col gap-4',
@@ -90,7 +95,7 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
 export default class NewIssueProcessingPageComponent {
   private readonly newIssueFormService = inject(NewIssueFormService);
   private readonly router = inject(Router);
-  private readonly issueService = inject(ApiService);
+  private readonly api = inject(ApiService);
 
   readonly issueTypes = input.required<IssueType[]>();
   readonly communityId = input.required<Community['id']>();
@@ -107,9 +112,7 @@ export default class NewIssueProcessingPageComponent {
     this.submitting.set(true);
 
     try {
-      const newIssueId = await this.issueService.submitNewIssue(
-        this.formValue(),
-      );
+      const newIssueId = await this.api.submitNewIssue(this.formValue());
 
       this.newIssueFormService.resetForm();
 

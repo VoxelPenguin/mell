@@ -1,23 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
-import { LocationData } from '../ui/location-picker.component';
 import { SelectModule } from 'primeng/select';
-import { Issue } from '../../../../types/db-types';
+import { Community } from '../../../../types/db-types';
 import { ArrowLeft, LucideAngularModule, Trash2 } from 'lucide-angular';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { NewIssueFormService } from '../data-access/new-issue-form.service';
+import { NewCommunityFormService } from '../data-access/new-community-form.service';
 
-export type NewIssueFormModel = Pick<
-  Required<Issue>,
-  'communityId' | 'typeId' | 'photoUrl' | 'description'
+export type NewCommunityFormModel = Pick<
+  Required<Community>,
+  'name' | 'logoUrl'
 > & {
-  location: LocationData;
+  location: {
+    latitude: number;
+    longitude: number;
+    radiusMeters: number;
+  };
 };
 
 @Component({
-  selector: 'mell-new-issue-page',
+  selector: 'mell-new-community-page',
   imports: [
     FormsModule,
     SelectModule,
@@ -44,7 +47,7 @@ export type NewIssueFormModel = Pick<
 })
 export default class NewIssuePageComponent {
   private readonly confirmationService = inject(ConfirmationService);
-  private readonly newIssueFormService = inject(NewIssueFormService);
+  private readonly newCommunityFormService = inject(NewCommunityFormService);
   private readonly router = inject(Router);
 
   goBack(): void {
@@ -53,11 +56,11 @@ export default class NewIssuePageComponent {
 
   confirmDiscard(): void {
     this.confirmationService.confirm({
-      header: 'Discard this new issue?',
+      header: 'Discard this new community?',
       message: 'Your progress will be lost.',
       closable: false,
       accept: () => {
-        this.newIssueFormService.resetForm();
+        this.newCommunityFormService.resetForm();
         void this.router.navigate(['/home']);
       },
     });

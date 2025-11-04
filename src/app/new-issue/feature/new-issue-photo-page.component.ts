@@ -31,7 +31,7 @@ import { resizeImageAndConvertToDataUrl } from '../../../../helpers/image-helper
       name="photo"
       required
       capture="environment"
-      style="display: none;"
+      class="hidden"
       (change)="onPhotoChange($event)"
     />
 

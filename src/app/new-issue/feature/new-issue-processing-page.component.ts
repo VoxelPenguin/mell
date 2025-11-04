@@ -3,11 +3,9 @@ import {
   Component,
   computed,
   inject,
-  input,
   OnInit,
   signal,
 } from '@angular/core';
-import { IssueType } from '../../../../types/db-types';
 import { Router } from '@angular/router';
 import { NewIssueFormService } from '../data-access/new-issue-form.service';
 import { ApiService } from '../../shared/data-access/api.service';
@@ -124,8 +122,6 @@ export default class NewIssueProcessingPageComponent implements OnInit {
   private readonly newIssueFormService = inject(NewIssueFormService);
   private readonly api = inject(ApiService);
   private readonly router = inject(Router);
-
-  readonly issueTypes = input.required<IssueType[]>();
 
   readonly formValue = this.newIssueFormService.formValue;
 

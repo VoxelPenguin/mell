@@ -14,7 +14,6 @@ export interface Issue {
   photoUrl: string;
   typeId?: string;
   type?: IssueType;
-  otherTypeName?: string;
   description: string;
   coordinates: [number, number]; // [longitude, latitude]
   address: string; // [longitude, latitude]
@@ -37,7 +36,7 @@ export interface IssueType {
 export interface Community {
   id: string;
   name: string;
-  logoUrl?: string;
+  logoUrl: string;
   geographicCenter: [number, number]; // [longitude, latitude]
   radiusMeters: number;
   issues: Issue[];
@@ -64,29 +63,20 @@ export interface Session {
 }
 
 // Utility Types - for partial updates or creation
-export type IssueInput = Omit<
-  Issue,
-  'id' | 'type' | 'community' | 'createdAt' | 'updatedAt'
->;
 export type IssueSubmission = Required<
-  Omit<
+  Pick<
     Issue,
-    'id' | 'type' | 'community' | 'submittedByEmail' | 'createdAt' | 'updatedAt'
+    | 'address'
+    | 'coordinates'
+    | 'communityId'
+    | 'photoUrl'
+    | 'typeId'
+    | 'description'
+    | 'status'
+    | 'numUpvotes'
   >
 >;
-export type IssueTypeInput = Omit<
-  IssueType,
-  'id' | 'community' | 'createdAt' | 'updatedAt'
->;
-export type CommunityInput = Omit<
+export type CommunitySubmission = Pick<
   Community,
-  'id' | 'issueTypes' | 'issues' | 'createdAt' | 'updatedAt'
+  'geographicCenter' | 'radiusMeters' | 'name' | 'logoUrl'
 >;
-export type UserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
-export type SessionInput = Omit<
-  Session,
-  'id' | 'user' | 'createdAt' | 'updatedAt'
->;
-
-// Utility type for responses without sensitive data
-export type SafeUser = Omit<User, 'password'>;
