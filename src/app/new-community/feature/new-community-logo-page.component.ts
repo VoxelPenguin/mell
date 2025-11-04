@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { resizeImageAndConvertToDataUrl } from '../../../../helpers/image-helpers';
 import { NewCommunityFormService } from '../data-access/new-community-form.service';
 import { NewCommunityFormModel } from './new-community-page.component';
-import { CommunityComponent } from '../../shared/ui/community.component';
 import { ApiService } from '../../shared/data-access/api.service';
 import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
 import { JsonPipe } from '@angular/common';
@@ -23,7 +22,6 @@ import { JsonPipe } from '@angular/common';
     ButtonDirective,
     LucideAngularModule,
     SpeechBubbleComponent,
-    CommunityComponent,
     ErrorMessageComponent,
     JsonPipe,
     Button,
@@ -44,22 +42,28 @@ import { JsonPipe } from '@angular/common';
       (change)="onImageChange($event)"
     />
 
-    <mell-community [name]="communityName()" [logoUrl]="logoUrl()">
-      @if (!logoUrl()) {
-        <ng-template #logo>
-          <button
-            pButton
-            class="flex size-30! w-full flex-col gap-4 rounded-full!"
-            type="button"
-            (click)="photoInput.click()"
-          >
-            <lucide-icon [img]="Upload" size="48" />
+    <div
+      class="flex flex-col items-center gap-4 self-center rounded-2xl bg-white p-6"
+    >
+      @if (logoUrl(); as logoUrl) {
+        <img [src]="logoUrl" class="size-30 rounded-full" alt="" />
+      } @else {
+        <button
+          pButton
+          class="flex size-30! w-full flex-col gap-4 rounded-full!"
+          type="button"
+          (click)="photoInput.click()"
+        >
+          <lucide-icon [img]="Upload" size="48" />
 
-            Upload
-          </button>
-        </ng-template>
+          Upload
+        </button>
       }
-    </mell-community>
+
+      <p class="text-center text-xl font-bold text-balance">
+        {{ communityName() }}
+      </p>
+    </div>
 
     @if (errorMessage()) {
       <mell-error-message>
@@ -83,6 +87,7 @@ import { JsonPipe } from '@angular/common';
         (onClick)="submit()"
         label="Finish"
         styleClass="w-full"
+        iconPos="right"
       >
         <ng-template #icon>
           <lucide-icon [img]="ArrowRight" size="20" />

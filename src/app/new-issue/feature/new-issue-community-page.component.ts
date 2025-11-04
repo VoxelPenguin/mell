@@ -11,7 +11,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
 import { ButtonDirective } from 'primeng/button';
 import { Router, RouterLink } from '@angular/router';
 import { NewIssueFormService } from '../data-access/new-issue-form.service';
-import { CommunityComponent } from '../../shared/ui/community.component';
+import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.component';
 
 @Component({
   selector: 'mell-new-issue-choose-community-page',
@@ -20,7 +20,7 @@ import { CommunityComponent } from '../../shared/ui/community.component';
     SpeechBubbleComponent,
     ButtonDirective,
     RouterLink,
-    CommunityComponent,
+    CommunityWithMapComponent,
   ],
   template: `
     @if (multipleMatchingCommunities()) {
@@ -63,10 +63,7 @@ import { CommunityComponent } from '../../shared/ui/community.component';
         >. Is that correct?
       </mell-speech-bubble>
 
-      <mell-community
-        [name]="firstCommunity().name"
-        [logoUrl]="firstCommunity().logoUrl"
-      />
+      <mell-community-with-map [community]="firstCommunity()" />
 
       <button pButton (click)="chooseCommunity(firstCommunity().id)">
         Yes

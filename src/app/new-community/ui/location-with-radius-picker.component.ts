@@ -1,7 +1,24 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, model, OnInit, signal } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  input,
+  model,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
-import { Loader, LucideAngularModule, Navigation, Search } from 'lucide-angular';
+import {
+  Loader,
+  LucideAngularModule,
+  Navigation,
+  Search,
+} from 'lucide-angular';
 import { ButtonDirective } from 'primeng/button';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
@@ -40,81 +57,84 @@ const PRIMARY_COLOR = '#f54a00';
   ],
   template: `
     <div class="flex flex-col gap-4">
-      <!-- Use My Location Button -->
-      <button
-        pButton
-        type="button"
-        (click)="useCurrentLocation()"
-        [disabled]="isLoadingLocation()"
-      >
-        <lucide-icon
-          [img]="navigationIcon()"
-          size="20"
-          [class.animate-spin]="isLoadingLocation()"
-        />
-        @if (isLoadingLocation()) {
-          Locating...
-        } @else {
-          Use My Location
-        }
-      </button>
+      @if (!readonly()) {
+        <!-- Use My Location Button -->
+        <button
+          pButton
+          type="button"
+          (click)="useCurrentLocation()"
+          [disabled]="isLoadingLocation()"
+        >
+          <lucide-icon
+            [img]="navigationIcon()"
+            size="20"
+            [class.animate-spin]="isLoadingLocation()"
+          />
+          @if (isLoadingLocation()) {
+            Locating...
+          } @else {
+            Use My Location
+          }
+        </button>
 
-      <!-- Address Search -->
-      <p-inputgroup>
-        <input
-          pInputText
-          id="address-input"
-          type="text"
-          [(ngModel)]="searchQuery"
-          (keydown.enter)="searchAddress()"
-          placeholder="Search for an address"
-          class="w-full"
-          [disabled]="isSearching()"
-        />
-        <p-inputgroup-addon>
-          <button
-            pButton
-            class="p-button-text p-button-secondary"
-            (click)="searchAddress()"
+        <!-- Address Search -->
+        <p-inputgroup>
+          <input
+            pInputText
+            id="address-input"
+            type="text"
+            [(ngModel)]="searchQuery"
+            (keydown.enter)="searchAddress()"
+            placeholder="Search for an address"
+            class="w-full"
             [disabled]="isSearching()"
-          >
-            <lucide-icon
-              [img]="searchIcon()"
-              size="20"
-              [class.animate-spin]="isSearching()"
-            />
-          </button>
-        </p-inputgroup-addon>
-      </p-inputgroup>
+          />
+          <p-inputgroup-addon>
+            <button
+              pButton
+              class="p-button-text p-button-secondary"
+              (click)="searchAddress()"
+              [disabled]="isSearching()"
+            >
+              <lucide-icon
+                [img]="searchIcon()"
+                size="20"
+                [class.animate-spin]="isSearching()"
+              />
+            </button>
+          </p-inputgroup-addon>
+        </p-inputgroup>
 
-      @if (errorMessage()) {
-        <mell-error-message>
-          {{ errorMessage() }}
-        </mell-error-message>
+        @if (errorMessage()) {
+          <mell-error-message>
+            {{ errorMessage() }}
+          </mell-error-message>
+        }
+
+        <!-- Radius Slider -->
+        <div class="mb-4 flex flex-col gap-4">
+          <label for="radius-slider" class="text-sm font-semibold">
+            Radius: {{ radiusInKm() }}km
+          </label>
+          <p-slider
+            id="radius-slider"
+            [ngModel]="value().radiusMeters"
+            (ngModelChange)="onRadiusChange($event)"
+            (onSlideEnd)="onRadiusSlideEnd()"
+            [min]="minRadius"
+            [max]="maxRadius"
+            [step]="10"
+            [disabled]="disabled()"
+          />
+        </div>
       }
-
-      <!-- Radius Slider -->
-      <div class="flex flex-col gap-2">
-        <label for="radius-slider" class="text-sm font-semibold text-gray-700">
-          Radius: {{ radiusInKm() }}km
-        </label>
-        <p-slider
-          id="radius-slider"
-          [ngModel]="value().radiusMeters"
-          (ngModelChange)="onRadiusChange($event)"
-          (onSlideEnd)="onRadiusSlideEnd()"
-          [min]="minRadius"
-          [max]="maxRadius"
-          [step]="10"
-          [disabled]="disabled()"
-        />
-      </div>
 
       <!-- Map -->
       <div>
         <div
-          class="border-primary-800 h-56 w-full overflow-hidden rounded-lg sm:h-[300px]"
-          id="map-container"
+          class="border-primary-800 h-56 w-full overflow-hidden rounded-lg sm:h-75"
+          [class.rounded-b-none]="flatBottom()"
+          #mapContainer
         >
           <!-- Leaflet map will be initialized here -->
         </div>
@@ -133,6 +153,8 @@ export class LocationWithRadiusPickerComponent
     radiusMeters: MIN_RADIUS_METERS,
   });
   readonly disabled = input(false);
+  readonly readonly = input(false);
+  readonly flatBottom = input(false, { transform: booleanAttribute });
 
   // State
   readonly searchQuery = signal('');
@@ -151,6 +173,9 @@ export class LocationWithRadiusPickerComponent
   readonly maxRadius = MAX_RADIUS_METERS;
 
   private mapMoveWasFromAddressSearch = false;
+
+  private readonly mapContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('mapContainer');
 
   // Leaflet map instance
   private map: any = null;
@@ -198,7 +223,7 @@ export class LocationWithRadiusPickerComponent
   }
 
   async useCurrentLocation(): Promise<void> {
-    if (this.disabled()) return;
+    if (this.disabled() || this.readonly()) return;
 
     this.errorMessage.set('');
 
@@ -267,7 +292,7 @@ export class LocationWithRadiusPickerComponent
   }
 
   async searchAddress(): Promise<void> {
-    if (this.disabled()) return;
+    if (this.disabled() || this.readonly()) return;
 
     const query = this.searchQuery().trim();
     if (!query) return;
@@ -333,6 +358,8 @@ export class LocationWithRadiusPickerComponent
   }
 
   onRadiusChange(newRadius: number): void {
+    if (this.readonly()) return;
+
     this.value.update((v) => ({
       ...v,
       radiusMeters: newRadius,
@@ -340,6 +367,8 @@ export class LocationWithRadiusPickerComponent
   }
 
   onRadiusSlideEnd(): void {
+    if (this.readonly()) return;
+
     // Fit map to circle after user finishes dragging
     this.fitMapToCircle();
   }
@@ -351,7 +380,7 @@ export class LocationWithRadiusPickerComponent
       const L = (window as any).L;
       if (!L) return;
 
-      const container = document.getElementById('map-container');
+      const container = this.mapContainer().nativeElement;
       if (!container) return;
 
       // Remove existing map if present
@@ -359,8 +388,18 @@ export class LocationWithRadiusPickerComponent
         this.map.remove();
       }
 
-      // Initialize map
-      this.map = L.map(container).setView(
+      // Initialize map with appropriate options
+      const mapOptions: any = {
+        dragging: !this.readonly(),
+        touchZoom: !this.readonly(),
+        doubleClickZoom: !this.readonly(),
+        scrollWheelZoom: !this.readonly(),
+        boxZoom: !this.readonly(),
+        keyboard: !this.readonly(),
+        zoomControl: !this.readonly(),
+      };
+
+      this.map = L.map(container, mapOptions).setView(
         [this.value().latitude, this.value().longitude],
         15,
       );
@@ -370,11 +409,13 @@ export class LocationWithRadiusPickerComponent
         maxZoom: 19,
       }).addTo(this.map);
 
-      // Add marker
-      this.marker = L.marker([
-        this.value().latitude,
-        this.value().longitude,
-      ]).addTo(this.map);
+      // Add marker - only if not readonly
+      if (!this.readonly()) {
+        this.marker = L.marker([
+          this.value().latitude,
+          this.value().longitude,
+        ]).addTo(this.map);
+      }
 
       // Add circle with primary color
       this.circle = L.circle([this.value().latitude, this.value().longitude], {
@@ -388,22 +429,25 @@ export class LocationWithRadiusPickerComponent
       // Fit map to circle initially
       this.fitMapToCircle();
 
-      this.map.on('move', () => {
-        const position = this.map.getCenter();
-        this.marker.setLatLng([position.lat, position.lng]);
-        this.circle.setLatLng([position.lat, position.lng]);
+      // Only add move events if not readonly
+      if (!this.readonly()) {
+        this.map.on('move', () => {
+          const position = this.map.getCenter();
+          this.marker.setLatLng([position.lat, position.lng]);
+          this.circle.setLatLng([position.lat, position.lng]);
 
-        this.value.update((value) => ({
-          ...value,
-          latitude: position.lat,
-          longitude: position.lng,
-        }));
-      });
+          this.value.update((value) => ({
+            ...value,
+            latitude: position.lat,
+            longitude: position.lng,
+          }));
+        });
 
-      this.map.on('moveend', () => {
-        if (this.mapMoveWasFromAddressSearch) return;
-        // Position has been updated via the move event
-      });
+        this.map.on('moveend', () => {
+          if (this.mapMoveWasFromAddressSearch) return;
+          // Position has been updated via the move event
+        });
+      }
     }, 100);
   }
 

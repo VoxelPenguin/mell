@@ -17,6 +17,13 @@
   --color-primary-950: var(--color-orange-950);
 }
 
+:root {
+  --p-slider-handle-width: 2rem !important;
+  --p-slider-handle-height: 2rem !important;
+  --p-slider-handle-content-width: 1.75rem !important;
+  --p-slider-handle-content-height: 1.75rem !important;
+}
+
 body {
   color: var(--color-primary-950);
 }
