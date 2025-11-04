@@ -7,5 +7,7 @@ import { environment } from '../../../environments/environment';
 export const issueResolver: ResolveFn<Issue[]> = (route) => {
   const http = inject(HttpClient);
 
-  return http.get<Issue[]>(`${environment.harperApiUrl}/Issue?select(*,type)`);
+  return http.get<Issue[]>(
+    `${environment.harperApiUrl}/Issue?select(*,type,community)&status!=Completed`,
+  );
 };

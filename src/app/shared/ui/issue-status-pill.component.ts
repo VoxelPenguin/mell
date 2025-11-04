@@ -8,7 +8,7 @@ import { IssueStatus } from '../../../../types/db-types';
 
 @Component({
   selector: 'mell-issue-status-pill',
-  template: ` <span
+  template: ` <p
     class="rounded-full px-[0.5rem] py-[0.05rem] font-bold"
     [class.bg-gray-300]="status() === IssueStatus.Open"
     [class.text-gray-600]="status() === IssueStatus.Open"
@@ -23,12 +23,16 @@ import { IssueStatus } from '../../../../types/db-types';
     [class.bg-red-200]="status() === IssueStatus.NotPlanned"
     [class.text-red-700]="status() === IssueStatus.NotPlanned"
   >
+    @if (showPrefix()) {
+      <span class="font-normal">Status: </span>
+    }
     {{ statusDisplayText() }}
-  </span>`,
+  </p>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IssueStatusPillComponent {
   readonly status = input.required<IssueStatus>();
+  readonly showPrefix = input<boolean>(false);
 
   readonly statusToDisplayText: Record<IssueStatus, string> = {
     [IssueStatus.Open]: 'Open',

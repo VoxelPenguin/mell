@@ -7,21 +7,14 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  Crosshair,
-  LucideAngularModule,
-  Navigation,
-  Search,
-  X,
-} from 'lucide-angular';
+import { LucideAngularModule, Navigation, Search } from 'lucide-angular';
 import { ButtonDirective } from 'primeng/button';
-import { ImageModule } from 'primeng/image';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { Issue } from '../../../../types/db-types';
 import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
-import { IssueStatusPillComponent } from '../../shared/ui/issue-status-pill.component';
+import { IssueInfoCardComponent } from '../../shared/ui/issue-info-card.component';
 
 interface NominatimResult {
   lat: string;
@@ -43,8 +36,7 @@ const MARKER_SIZE = 80;
     InputGroup,
     InputGroupAddon,
     ErrorMessageComponent,
-    IssueStatusPillComponent,
-    ImageModule,
+    IssueInfoCardComponent,
   ],
   template: `
     <div class="flex h-full flex-col gap-4">
@@ -106,66 +98,15 @@ const MARKER_SIZE = 80;
 
         <!-- Issue Info -->
         @if (selectedIssue(); as issue) {
-          <div
-            class="absolute bottom-[1rem] z-5 flex h-[25rem] w-[calc(100%-2rem)] flex-col gap-3 overflow-y-auto rounded-lg bg-gray-50 px-4 py-3 shadow-[0_-10px_10px_rgba(0,0,0,0.25)]"
-          >
-            <div class="flex justify-between">
-              <!-- Issue Type -->
-              <div class="text-lg font-semibold text-gray-900">
-                {{ issue.type?.name ?? 'Unknown Issue' }}
-              </div>
-
-              <!-- Close Button -->
-              <button
-                class="rounded-full p-1 text-gray-500 active:bg-gray-200"
-                (click)="hideSelectedIssue()"
-              >
-                <lucide-icon [img]="X" [size]="20" />
-              </button>
-            </div>
-
-            <!-- Center on Map Button -->
-            <button
-              class="text-primary-500 active:text-primary-600 flex items-center gap-2 self-start rounded p-1 text-sm font-semibold transition-colors active:bg-gray-200"
-              (click)="centerOnSelectedIssue()"
-              type="button"
-            >
-              <lucide-icon [img]="Crosshair" [size]="16" />
-              <span>Center Issue on Map</span>
-            </button>
-
-            <!-- Issue Status -->
-            <div class="flex gap-2 text-sm text-gray-600">
-              <strong>Status:</strong>
-              <mell-issue-status-pill [status]="issue.status" />
-            </div>
-
-            <!-- Issue Description -->
-            @if (issue.description) {
-              <div class="text-sm text-gray-600">
-                <strong>Description:</strong>
-                {{ issue.description }}
-              </div>
-            }
-
-            <!-- Issue Address -->
-            <div class="text-sm text-gray-600">
-              <strong>Reported at:</strong>
-              {{ issue.address }}
-            </div>
-
-            <!-- Issue Photo -->
-            <div class="flex flex-col gap-1 text-sm text-gray-600">
-              <strong>Images (click to enlarge):</strong>
-              <p-image
-                [src]="issue.photoUrl"
-                [alt]="issue.description"
-                width="96"
-                [preview]="true"
-                styleClass="rounded-full"
-              />
-            </div>
-          </div>
+          <mell-issue-info-card
+            class="absolute bottom-[1rem] z-5 h-[40%] min-h-[18rem] w-[calc(100%-2rem)] max-w-[calc(576px-2rem)] overflow-y-auto rounded-lg shadow-[0_-10px_10px_rgba(0,0,0,0.25)]"
+            [issue]="issue"
+            [showCloseButton]="true"
+            [showLocationButton]="true"
+            [showImagePreview]="true"
+            (closeButtonClick)="hideSelectedIssue()"
+            (centerButtonClick)="centerOnSelectedIssue()"
+          />
         } @else {
           <div
             class="rounded-t-none rounded-b-lg bg-gray-50 px-4 py-3 text-base text-gray-600"
@@ -489,6 +430,4 @@ export class ExistingIssueMapComponent implements OnInit {
 
   protected readonly Navigation = Navigation;
   protected readonly Search = Search;
-  protected readonly Crosshair = Crosshair;
-  protected readonly X = X;
 }
