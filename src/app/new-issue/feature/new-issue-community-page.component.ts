@@ -24,7 +24,7 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
   ],
   template: `
     @if (multipleMatchingCommunities()) {
-      <mell-speech-bubble imageUrl="/images/mell-pirate.png">
+      <mell-speech-bubble>
         It looks like this is within multiple communities! Which community
         should we report the issue to?
       </mell-speech-bubble>
@@ -57,7 +57,7 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
         None of the above
       </a>
     } @else if (singleMatchingCommunity()) {
-      <mell-speech-bubble imageUrl="/images/mell-pirate.png">
+      <mell-speech-bubble>
         It looks like this issue is within
         <span class="font-semibold">{{ firstCommunity().name }}</span
         >. Is that correct?
@@ -77,7 +77,10 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
         No
       </a>
     } @else {
-      <mell-speech-bubble>
+      <mell-speech-bubble
+        imageUrl="/images/mell-analyzing.webp"
+        imageStyleClass="scale-x-[-1]"
+      >
         It looks like there aren't any communities set up in your area yet.
         Would you like to create one?
       </mell-speech-bubble>

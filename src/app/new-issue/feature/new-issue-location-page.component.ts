@@ -17,7 +17,7 @@ import { NewIssueFormService } from '../data-access/new-issue-form.service';
     SpeechBubbleComponent,
   ],
   template: `
-    <mell-speech-bubble imageUrl="/images/mell-pirate.png">
+    <mell-speech-bubble imageUrl="/images/mell-pirate.webp">
       Where is the issue located?
     </mell-speech-bubble>
 

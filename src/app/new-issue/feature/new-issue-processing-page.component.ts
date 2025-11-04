@@ -14,6 +14,13 @@ import { ErrorMessageComponent } from '../../shared/ui/error-message.component';
 import { JsonPipe } from '@angular/common';
 import { Button } from 'primeng/button';
 import { LucideAngularModule, RotateCcw } from 'lucide-angular';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { interval, map, startWith } from 'rxjs';
+
+const MELL_IMAGES = [
+  '/images/mell-analyzing.webp',
+  '/images/mell-analyzing-smiling.webp',
+];
 
 @Component({
   selector: 'mell-new-issue-processing-page',
@@ -33,7 +40,7 @@ import { LucideAngularModule, RotateCcw } from 'lucide-angular';
         <img [src]="photoUrl()" class="w-full rounded-xl shadow-lg" alt="" />
       </div>
 
-      <img src="/images/mell-base.png" class="w-2/5" alt="" />
+      <img [src]="mellImageSrc()" class="h-40" alt="" />
     </div>
 
     @if (errorMessage()) {
@@ -129,6 +136,15 @@ export default class NewIssueProcessingPageComponent implements OnInit {
 
   readonly analyzing = signal(false);
   readonly errorMessage = signal<unknown>(null);
+
+  readonly mellImageSrc = toSignal(
+    interval(2000).pipe(
+      map((tick) => (tick + 1) % MELL_IMAGES.length),
+      startWith(0),
+      map((index) => MELL_IMAGES[index]),
+    ),
+    { requireSync: true },
+  );
 
   async analyzePhoto() {
     this.analyzing.set(true);

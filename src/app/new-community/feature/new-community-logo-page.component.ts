@@ -27,7 +27,7 @@ import { JsonPipe } from '@angular/common';
     Button,
   ],
   template: `
-    <mell-speech-bubble>
+    <mell-speech-bubble imageUrl="/images/mell-camera.webp">
       Great! Now, let's upload a logo for {{ communityName() }}.
     </mell-speech-bubble>
 

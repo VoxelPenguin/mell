@@ -20,7 +20,7 @@ import { resizeImageAndConvertToDataUrl } from '../../../../helpers/image-helper
     RouterLink,
   ],
   template: `
-    <mell-speech-bubble>
+    <mell-speech-bubble imageUrl="/images/mell-camera.webp">
       Great! Now, snap a photo of the issue
     </mell-speech-bubble>
 
