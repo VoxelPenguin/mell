@@ -4,7 +4,7 @@ type Issue @table(audit: true) @export {
   typeId: ID @indexed
   type: IssueType @relationship(from: typeId)
   description: String!
-  coordinates: [Float!]! @indexed(type: "HNSW")
+  coordinates: [Float!]! @indexed(type: "HNSW", distance: "euclidean")
   address: String!
   communityId: ID! @indexed
   community: Community @relationship(from: communityId)

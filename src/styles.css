@@ -38,3 +38,18 @@ p-select {
     width: 100%;
   }
 }
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+@media (max-width: 640px) {
+  /* disable selecting text not in a text box on small devices (smartphones) */
+  :not(input):not(textarea),
+  :not(input):not(textarea)::after,
+  :not(input):not(textarea)::before,
+  input[type='submit'] {
+    user-select: none;
+  }
+}

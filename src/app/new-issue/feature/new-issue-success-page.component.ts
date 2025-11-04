@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -9,6 +10,7 @@ import { ButtonDirective } from 'primeng/button';
 import { Issue } from '../../../../types/db-types';
 import { IssueInfoCardComponent } from '../../shared/ui/issue-info-card.component';
 import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
+import * as confetti from 'canvas-confetti';
 
 @Component({
   selector: 'mell-new-issue-success-page',
@@ -19,7 +21,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     IssueInfoCardComponent,
   ],
   template: `
-    <mell-speech-bubble>
+    <mell-speech-bubble imageUrl="/images/mell-jump.webp">
       <p class="mb-2">Success! 🎉</p>
 
       <p class="mb-2">
@@ -44,8 +46,16 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class NewIssueSuccessPageComponent {
+export default class NewIssueSuccessPageComponent implements AfterViewInit {
   readonly issue = input.required<Issue>();
 
   readonly photoUrl = computed(() => this.issue().photoUrl);
+
+  ngAfterViewInit(): void {
+    confetti.default({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
 }

@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 
 @Component({
   selector: 'mell-speech-bubble',
   template: `
-    <img [src]="imageUrl()" height="100" width="100" alt="" class="self-end" />
+    <img [src]="imageUrl()" alt="" [class]="imageClass()" />
 
     <div class="speech-bubble">
       <ng-content />
@@ -36,5 +41,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpeechBubbleComponent {
-  imageUrl = input('/images/mell-base.png');
+  readonly imageUrl = input('/images/mell-base.webp');
+  readonly imageStyleClass = input('');
+
+  readonly imageClass = computed(
+    () => `self-end h-30 shrink-0 ${this.imageStyleClass()}`,
+  );
 }

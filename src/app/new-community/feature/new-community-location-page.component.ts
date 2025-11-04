@@ -17,7 +17,7 @@ import { LocationWithRadiusPickerComponent } from '../ui/location-with-radius-pi
     SpeechBubbleComponent,
   ],
   template: `
-    <mell-speech-bubble imageUrl="/images/mell-pirate.png">
+    <mell-speech-bubble imageUrl="/images/mell-pirate.webp">
       Where is your community located?
     </mell-speech-bubble>
 

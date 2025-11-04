@@ -1,6 +1,7 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
+  isDevMode,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import { ConfirmationService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import { harperCredentialsInterceptor } from './shared/data-access/harper-credentials.interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,6 +31,11 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideHttpClient(withInterceptors([harperCredentialsInterceptor])),
+
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
 
     // PrimeNG still uses deprecated Angular animations
     provideAnimationsAsync(),

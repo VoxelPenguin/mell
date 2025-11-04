@@ -36,7 +36,7 @@ import { IssueStatusPillComponent } from './issue-status-pill.component';
 
       <div class="flex justify-between">
         <!-- Community Logo and Name -->
-        <p class="flex gap-2 font-semibold">
+        <p class="flex items-center gap-2 font-semibold">
           @if (issue().community?.logoUrl; as communityLogoUrl) {
             <img
               [src]="communityLogoUrl"
@@ -49,7 +49,7 @@ import { IssueStatusPillComponent } from './issue-status-pill.component';
 
         <!-- Status -->
         <mell-issue-status-pill
-          class="text-sm"
+          class="shrink-0 text-sm"
           [status]="issue().status"
           [showPrefix]="true"
         />

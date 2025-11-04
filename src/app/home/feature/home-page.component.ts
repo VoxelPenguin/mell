@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -6,24 +5,25 @@ import { ButtonModule } from 'primeng/button';
 import { interval, map, startWith } from 'rxjs';
 import { Community } from '../../../../types/db-types';
 import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.component';
+import { LogIn, LucideAngularModule } from 'lucide-angular';
+
+const MELL_IMAGES = [
+  '/images/mell-waving.webp',
+  '/images/mell-manhole.webp',
+  '/images/mell-tree.webp',
+  '/images/mell-pothole.webp',
+];
 
 @Component({
   selector: 'mell-home-page',
   imports: [
     RouterLink,
     ButtonModule,
-    NgOptimizedImage,
     CommunityWithMapComponent,
+    LucideAngularModule,
   ],
   template: `
-    <img
-      [ngSrc]="mellImageSrc()"
-      alt=""
-      height="256"
-      width="256"
-      class="mx-auto size-64"
-      priority
-    />
+    <img [src]="mellImageSrc()" alt="" class="mx-auto size-64" />
 
     <h1 class="text-center text-3xl font-bold">
       Meet <span class="text-primary-700">Mell</span>
@@ -31,8 +31,7 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
 
     <p class="py-5 text-center text-balance">
       Your community's watchful friend. Report local issues in seconds, track
-      their progress, and help your community stay safe and clean,
-      <strong>together</strong>.
+      their progress, and help keep your community safe and clean!
     </p>
 
     <a routerLink="../new-issue" pButton> Submit new issue </a>
@@ -41,7 +40,7 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
     </a>
 
     <h2 class="mt-8 mb-5 text-center text-xl font-semibold text-balance">
-      We proudly support all of these communities:
+      We proudly serve all of these communities:
     </h2>
 
     <div class="flex flex-col gap-4">
@@ -59,11 +58,13 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
     </div>
 
     <a pButton class="p-button-secondary" routerLink="../communities">
+      <lucide-icon [img]="LogIn" size="20" />
+
       Community manager login
     </a>
   `,
   host: {
-    class: 'flex flex-col gap-2',
+    class: 'flex flex-col gap-2 pt-8',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -71,13 +72,13 @@ export default class HomePageComponent {
   readonly allCommunities = input.required<Community[]>();
 
   readonly mellImageSrc = toSignal(
-    interval(1500).pipe(
-      map((tick) => (tick + 1) % 2),
+    interval(3000).pipe(
+      map((tick) => (tick + 1) % MELL_IMAGES.length),
       startWith(0),
-      map(
-        (index) => ['/images/mell-base.png', '/images/mell-waving.png'][index],
-      ),
+      map((index) => MELL_IMAGES[index]),
     ),
     { requireSync: true },
   );
+
+  protected readonly LogIn = LogIn;
 }
