@@ -77,7 +77,9 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
                 <th class="w-[15rem]" pSortableColumn="address">
                   Address <p-sortIcon field="address" />
                 </th>
-                <th class="w-[10rem]">Submitted On</th>
+                <th class="w-[10rem]" pSortableColumn="createdAt">
+                  Submitted On <p-sortIcon field="createdAt" />
+                </th>
                 <th class="w-[25rem]">Description</th>
                 <th class="w-[15rem]" pSortableColumn="status">
                   Status <p-sortIcon field="status" />
@@ -151,10 +153,6 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
       :host ::ng-deep .p-datatable {
         border-radius: 0.5rem;
         overflow: hidden;
-      }
-
-      :host ::ng-deep .p-datatable .p-datatable-thead > tr:last-child > th {
-        border-bottom: none;
       }
 
       :host
