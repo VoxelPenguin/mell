@@ -20,6 +20,7 @@ export const routes: Routes = [
   {
     path: 'communities',
     loadChildren: () => import('./communities/feature/lib.routes'),
+    data: { preferDesktop: true },
   },
   {
     path: '**',

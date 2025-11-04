@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime } from 'rxjs';
 import { Community } from '../../../../types/db-types';
@@ -21,8 +22,15 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     FormsModule,
     CommunityComponent,
     SpeechBubbleComponent,
+    LucideAngularModule,
+    RouterLink,
   ],
   template: `
+    <!-- Back Button -->
+    <a class="flex h-full gap-1 self-start pt-3 pr-3 pb-3" routerLink="/">
+      <lucide-icon [img]="ArrowLeft" />
+    </a>
+
     <mell-speech-bubble class="self-start"
       >Let's find your community.</mell-speech-bubble
     >
@@ -48,7 +56,7 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     </div>
   `,
   host: {
-    class: 'flex flex-col items-center gap-3',
+    class: 'flex flex-col items-center gap-3 max-w-[50rem] mx-auto',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -71,4 +79,6 @@ export default class CommunitiesSearchPageComponent {
   onCommunityClick(communityId: Community['id']): void {
     this.router.navigate([`/communities/dashboard/${communityId}`]);
   }
+
+  protected readonly ArrowLeft = ArrowLeft;
 }

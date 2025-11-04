@@ -9,6 +9,8 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 import { ImageModule } from 'primeng/image';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectModule } from 'primeng/select';
@@ -29,8 +31,15 @@ import { SpeechBubbleComponent } from '../../shared/ui/speech-bubble.component';
     IssueStatusPillComponent,
     FormsModule,
     ProgressBarModule,
+    RouterLink,
+    LucideAngularModule,
   ],
   template: `
+    <!-- Back Button -->
+    <a class="flex h-full gap-1 pt-3 pr-3 pb-3" routerLink="/communities">
+      <lucide-icon [img]="ArrowLeft" />
+    </a>
+
     @if (community(); as community) {
       <div class="flex w-full flex-col gap-4" #container>
         <!-- Header -->
@@ -234,4 +243,5 @@ export default class CommunityDashboardPageComponent {
   }
 
   readonly issueStatuses = Object.values(IssueStatus);
+  protected readonly ArrowLeft = ArrowLeft;
 }

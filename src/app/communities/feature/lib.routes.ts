@@ -16,7 +16,6 @@ const communitiesRoutes: Routes = [
       issues: issuesByCommunityResolver,
       community: communityResolver,
     },
-    data: { preferDesktop: true },
   },
   {
     path: '**',
