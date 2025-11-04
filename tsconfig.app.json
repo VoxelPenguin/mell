@@ -4,8 +4,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": [],
+    "types": []
   },
-  "include": ["src/**/*.ts", "helpers/image-helpers.ts", "helpers/location-helpers.ts"],
+  "include": [
+    "src/**/*.ts",
+    "helpers/image-helpers.ts",
+    "helpers/location-helpers.ts"
+  ],
   "exclude": ["src/**/*.spec.ts"]
 }

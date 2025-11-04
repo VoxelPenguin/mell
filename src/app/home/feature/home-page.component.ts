@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { interval, map, startWith } from 'rxjs';
 import { Community } from '../../../../types/db-types';
 import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.component';
+import { LogIn, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'mell-home-page',
@@ -14,6 +15,7 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
     ButtonModule,
     NgOptimizedImage,
     CommunityWithMapComponent,
+    LucideAngularModule,
   ],
   template: `
     <img
@@ -41,7 +43,7 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
     </a>
 
     <h2 class="mt-8 mb-5 text-center text-xl font-semibold text-balance">
-      We proudly support all of these communities:
+      We proudly serve all of these communities:
     </h2>
 
     <div class="flex flex-col gap-4">
@@ -59,6 +61,8 @@ import { CommunityWithMapComponent } from '../../shared/ui/community-with-map.co
     </div>
 
     <a pButton class="p-button-secondary" routerLink="../communities">
+      <lucide-icon [img]="LogIn" size="20" />
+
       Community manager login
     </a>
   `,
@@ -80,4 +84,6 @@ export default class HomePageComponent {
     ),
     { requireSync: true },
   );
+
+  protected readonly LogIn = LogIn;
 }
