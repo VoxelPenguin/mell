@@ -1,18 +1,27 @@
 import { Routes } from '@angular/router';
+import { communitiesContainingTextResolver } from '../data-access/communities-containing-text.resolver';
+import { communityResolver } from '../data-access/community.resolver';
+import { issuesByCommunityResolver } from '../data-access/issues-by-community.resolver';
 
 const communitiesRoutes: Routes = [
-  // {
-  //   path: '',
-  //   loadComponent: () => import('./communities-list-page.component'),
-  // },
-  // {
-  //   path: ':communityId',
-  //   loadComponent: () => import('./communities-community-page.component'),
-  // },
+  {
+    path: 'search/:searchString',
+    loadComponent: () => import('./communities-search-page.component'),
+    resolve: { communities: communitiesContainingTextResolver },
+  },
+  {
+    path: 'dashboard/:communityId',
+    loadComponent: () => import('./community-dashboard-page.component'),
+    resolve: {
+      issues: issuesByCommunityResolver,
+      community: communityResolver,
+    },
+    data: { preferDesktop: true },
+  },
   {
     path: '**',
     pathMatch: 'full',
-    redirectTo: '',
+    redirectTo: 'search/',
   },
 ];
 

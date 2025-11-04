@@ -1,4 +1,6 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   contentChild,
@@ -6,7 +8,6 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { Community } from '../../../../types/db-types';
-import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'mell-community',
@@ -25,12 +26,16 @@ import { NgTemplateOutlet } from '@angular/common';
   host: {
     class:
       'flex flex-col items-center gap-4 self-center rounded-2xl bg-white p-6',
+    '[class.cursor-pointer]': 'interactive()',
+    '[class.hover:bg-slate-100]': 'interactive()',
+    '[class.hover:translate-x-1]': 'interactive()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommunityComponent {
   readonly name = input.required<Community['name']>();
   readonly logoUrl = input<Community['logoUrl']>();
+  readonly interactive = input(false, { transform: booleanAttribute });
 
   readonly logoTemplate = contentChild<TemplateRef<unknown>>('logo');
 }

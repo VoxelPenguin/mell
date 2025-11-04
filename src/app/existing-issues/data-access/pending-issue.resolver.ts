@@ -4,7 +4,7 @@ import { ResolveFn } from '@angular/router';
 import { Issue } from '../../../../types/db-types';
 import { environment } from '../../../environments/environment';
 
-export const issueResolver: ResolveFn<Issue[]> = (route) => {
+export const pendingIssueResolver: ResolveFn<Issue[]> = (route) => {
   const http = inject(HttpClient);
 
   return http.get<Issue[]>(

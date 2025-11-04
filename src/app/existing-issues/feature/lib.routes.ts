@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { issueResolver } from '../data-access/issue.resolver';
+import { pendingIssueResolver } from '../data-access/pending-issue.resolver';
 
 const existingIssuesRoutes: Routes = [
   {
     path: '',
     loadComponent: () => import('./existing-issues-page.component'),
-    resolve: { issues: issueResolver },
+    resolve: { issues: pendingIssueResolver },
   },
   {
     path: '**',

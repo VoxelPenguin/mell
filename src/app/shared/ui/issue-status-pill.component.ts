@@ -9,7 +9,7 @@ import { IssueStatus } from '../../../../types/db-types';
 @Component({
   selector: 'mell-issue-status-pill',
   template: ` <p
-    class="rounded-full px-[0.5rem] py-[0.05rem] font-bold"
+    class="inline-block rounded-full px-[0.5rem] py-[0.05rem] font-semibold"
     [class.bg-gray-300]="status() === IssueStatus.Open"
     [class.text-gray-600]="status() === IssueStatus.Open"
     [class.bg-green-200]="status() === IssueStatus.Completed"

@@ -1,6 +1,11 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { NewIssueFormModel } from '../../new-issue/feature/new-issue-page.component';
+import { inject, Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import {
+  getMimeType,
+  getRawImageData,
+} from '../../../../helpers/image-helpers';
+import { PhotoAnalysisPayload } from '../../../../types/api-types';
 import {
   Community,
   CommunitySubmission,
@@ -9,13 +14,8 @@ import {
   IssueSubmission,
 } from '../../../../types/db-types';
 import { environment } from '../../../environments/environment';
-import { firstValueFrom } from 'rxjs';
-import {
-  getMimeType,
-  getRawImageData,
-} from '../../../../helpers/image-helpers';
-import { PhotoAnalysisPayload } from '../../../../types/api-types';
 import { NewCommunityFormModel } from '../../new-community/feature/new-community-page.component';
+import { NewIssueFormModel } from '../../new-issue/feature/new-issue-page.component';
 
 @Injectable({
   providedIn: 'root',
@@ -76,6 +76,23 @@ export class ApiService {
       this.http.post<Community['id']>(
         `${environment.harperApiUrl}/Community/`,
         submission,
+      ),
+    );
+  }
+
+  updateIssue(updatedIssue: Issue): Promise<unknown> {
+    // server will return an error if a computed field is included
+    const updatedIssueWithoutComputedProperties = {
+      ...updatedIssue,
+      type: undefined,
+      community: undefined,
+      otherTypeName: undefined,
+    };
+
+    return firstValueFrom(
+      this.http.put<unknown>(
+        `${environment.harperApiUrl}/Issue/${updatedIssueWithoutComputedProperties.id}`,
+        updatedIssueWithoutComputedProperties,
       ),
     );
   }
