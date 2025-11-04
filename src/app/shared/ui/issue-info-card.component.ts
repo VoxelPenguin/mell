@@ -87,6 +87,7 @@ import { IssueStatusPillComponent } from './issue-status-pill.component';
             width="96"
             [preview]="true"
             class="rounded"
+            appendTo="body"
           />
         </div>
       }
