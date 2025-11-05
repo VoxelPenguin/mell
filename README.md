@@ -1,59 +1,114 @@
-# Mell
+<h1 align="center">Mell</h1>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+<p align="center">Empower your community to report and solve local issues!</p>
 
-## Development server
+<p align="center">
+  <img alt="Mell the meerkat with a magnifying glass" height="115" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMszHTU4dgtHEDedNoL9TvjZrmkcK6isGRSACb" style="padding-right: 10px"/>
+  <img alt="Mell the meerkat with a camera" height="112" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMvw0WOw9rxYqBHMNXsDmWVjKrUouR5vGpZc19" style="padding-right: 20px" />
+  <img alt="Mell the meerkat" height="105" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFM9onLSR7PVyA7NhaHwpQGCoq2ZjifxbSkW5XR" />
+  <img alt="Mell the meerkat with a tree branch" height="120" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFM8sEKGoXX1EYvoapqfwi5BgZJOusIC3Lez2Uj" />
+  <img alt="Mell the meerkat in a manhole" height="120" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMDO8RBG6IktjmOQwrZfd3pvyXlqPSUiMgL9ac" />
+</p>
 
-To start a local development server, run:
+## About
 
-```bash
-ng serve
+**Mell makes civic engagement effortless.** Spotted a pothole? Broken streetlight? Downed tree? Most cities have a 311 line for reporting issues, but the process can be confusing and time-consuming.
+
+Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route community issues to the right authorities—all in seconds, and without ever needing to make a phone call.
+
+## Key Features
+
+📸 **Snap & Report** - Take a photo of any community issue\
+🤖 **AI-Powered Detection** - Automatically identifies and categorizes problems\
+🎯 **Smart Routing** - Connects you to the right department or authority\
+📊 **Track Progress** - Follow up on your reports and see resolutions\
+🗺️ **Community Map** - View issues reported by neighbors
+
+<img alt="Mell location picker page on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMTixwaMGW0PFMQBaA2fpyIwcLVJUSdGk5o6vN" />
+<img alt="Mell existing map on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMb7iNNcJwvFMNC4ipsT7ZdoYcW0VtrRHunfIE" />
+
+## Technology Stack
+
+[<img src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMFXlIEgAEGofnUsDIer2lOkmv6ZCiqcLu7WRz" height="25"></img>](https://harper.fast/)
+[![Angular](https://img.shields.io/badge/angular-%23DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+
+## Getting Started
+
+### Prerequisites
+
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/) v22
+- [Harper](https://www.harper.fast/)
+
+### Install
+
+```sh
+git clone https://github.com/VoxelPenguin/mell.git
+cd mell
+npm run si
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Add environment variables
 
-## Code scaffolding
+Create a `.env` file, and fill in the variables.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```shell
+cp .env.example .env
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Run
 
-```bash
-ng generate --help
+#### Run a local Harper instance
+
+```sh
+harperdb
 ```
 
-## Building
+#### Run the angular app
 
-To build the project run:
-
-```bash
-ng build
+```sh
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Deploy
 
-## Running unit tests
+#### Deploy to your local Harper instance
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+NOTE: The local instance must be running before you can deploy.
 
-```bash
-ng test
+```sh
+npm run deploy:dev
 ```
 
-## Running end-to-end tests
+#### Deploy to your remote Harper instance
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```sh
+npm run deploy:prod
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Authors
 
-## Additional Resources
+<a href="https://github.com/c-o-l-i-n">
+  <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/40863449?v=4&w=140&fit=cover&mask=circle&maxage=7d" style="width: 70px" align="left" alt=""/>
+</a>
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Colin A. Williams**
+
+Website: [colinaw.com](https://colinaw.com)
+<br>
+Github: [@c-o-l-i-n](https://github.com/c-o-l-i-n)
+
+<a href="https://github.com/theuphonist">
+  <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/120233007?v=4&w=140&fit=cover&mask=circle&maxage=7d" style="width: 70px" align="left" alt=""/>
+</a>
+
+**Josh Mack**
+
+Github: [@VoxelPenguin](https://github.com/VoxelPenguin)
+
+## License
+
+The MIT License
+
+Copyright © 2025 [Colin A. Williams](https://github.com/c-o-l-i-n) and [Josh Mack](https://github.com/VoxelPenguin).

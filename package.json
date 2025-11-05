@@ -1,6 +1,7 @@
 {
   "name": "mell",
   "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --ssl true",
@@ -21,7 +22,6 @@
     "*.{ts,js,tsx,jsx,css,scss,sass,json,md,yml,yaml,html}": "prettier --write",
     "*.ts": "eslint --fix"
   },
-  "license": "Apache-2.0",
   "dependencies": {
     "@angular/animations": "~21.0.0-rc.0",
     "@angular/common": "~21.0.0-rc.0",
