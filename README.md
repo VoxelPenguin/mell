@@ -1,6 +1,6 @@
 <h1 align="center">Mell</h1>
 
-<p align="center">Empower your community to report and solve local issues!</p>
+<p align="center">Empower your community to report and solve local issues!<br />https://mell.creative-juices.harperfabric.com/</p>
 
 <p align="center">
   <img alt="Mell the Meerkat with a magnifying glass" height="115" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMszHTU4dgtHEDedNoL9TvjZrmkcK6isGRSACb" />
@@ -12,7 +12,7 @@
 
 ## About
 
-**Mell makes civic engagement effortless.** Spotted a pothole? Broken streetlight? Downed tree? Most cities have a 311 line for reporting issues, but the process can be confusing and time-consuming.
+**Mell makes civic engagement effortless and fun.** Spotted a pothole? Broken streetlight? Downed tree? Most cities have a 311 line for reporting issues, but the process can be confusing and time-consuming.
 
 Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route community issues to the right authorities - all in seconds, and without ever needing to make a phone call. Our friendly mascot Mell the Meerkat walks you through each step of the process. Meerkats are observant and always on the lookout for trouble - the perfect companion to help keep your community safe and well-maintained!
 
@@ -23,7 +23,8 @@ Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route comm
 🎯 **Smart Routing** - Connects you to the right department or authority\
 📊 **Track Progress** - Follow up on your reports and see resolutions\
 🗺️ **Community Map** - View issues reported by neighbors\
-🛠️ **Manager Dashboard** - Community managers can view, triage, and manage all reported issues
+🛠️ **Manager Dashboard** - Community managers can view, triage, and manage all reported issues\
+🌐 **PWA** - Install the webapp on your phone for a native-like experience
 
 <p>
   <img alt="Mell location picker page on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMTixwaMGW0PFMQBaA2fpyIwcLVJUSdGk5o6vN" />
@@ -51,7 +52,7 @@ Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route comm
 ```sh
 git clone https://github.com/VoxelPenguin/mell.git
 cd mell
-npm run si
+npm run si # "safe install" - runs `npm install` with --legacy-peer-deps and runs `npm link harperdb`
 ```
 
 #### Start your local Harper instance
