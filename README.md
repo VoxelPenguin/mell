@@ -14,7 +14,7 @@
 
 **Mell makes civic engagement effortless.** Spotted a pothole? Broken streetlight? Downed tree? Most cities have a 311 line for reporting issues, but the process can be confusing and time-consuming.
 
-Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route community issues to the right authorities—all in seconds, and without ever needing to make a phone call. Our friendly mascot Mell the Meerkat walks you through each step of the process. Meerkats are observant and always on the lookout for trouble—the perfect companion to help keep your community safe and well-maintained!
+Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route community issues to the right authorities - all in seconds, and without ever needing to make a phone call. Our friendly mascot Mell the Meerkat walks you through each step of the process. Meerkats are observant and always on the lookout for trouble - the perfect companion to help keep your community safe and well-maintained!
 
 ## Key Features
 
@@ -66,9 +66,9 @@ harperdb
 npm run deploy:dev
 ```
 
-#### (Optional) Add environment variables
+#### Add environment variables
 
-Create a `.env` file, and fill in the variables. You can skip this step if you only plan to run locally.
+Create a `.env` file, and fill in the variables.
 
 ```shell
 cp .env.example .env
