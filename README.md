@@ -24,8 +24,10 @@ Mell (a portmanteau of "My 311") uses AI to identify, categorize, and route comm
 📊 **Track Progress** - Follow up on your reports and see resolutions\
 🗺️ **Community Map** - View issues reported by neighbors
 
-<img alt="Mell location picker page on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMTixwaMGW0PFMQBaA2fpyIwcLVJUSdGk5o6vN" />
-<img alt="Mell existing map on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMb7iNNcJwvFMNC4ipsT7ZdoYcW0VtrRHunfIE" />
+<p>
+  <img alt="Mell location picker page on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMTixwaMGW0PFMQBaA2fpyIwcLVJUSdGk5o6vN" />
+  <img alt="Mell existing map on an iPhone" height="400px" src="https://g4rj7scqm0.ufs.sh/f/T2qbMCGW0PFMb7iNNcJwvFMNC4ipsT7ZdoYcW0VtrRHunfIE" />
+</p>
 
 ## Technology Stack
 
